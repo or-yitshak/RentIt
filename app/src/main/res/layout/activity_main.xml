@@ -21,13 +21,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcomeTxt"
         android:layout_marginTop="60dp"
-        android:hint="username"
-        android:id="@+id/usernameETxt"
+        android:hint="email"
+        android:id="@+id/emailETxt"
         />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/usernameETxt"
+        android:layout_below="@id/emailETxt"
         android:layout_marginTop="15dp"
         android:hint="password"
         android:id="@+id/passwordETxt"

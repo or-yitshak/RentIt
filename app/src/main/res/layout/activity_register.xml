@@ -16,18 +16,19 @@
         android:text="Welcome!" />
 
     <EditText
-        android:id="@+id/usernameETxt"
+        android:id="@+id/emailETxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcomeTxt"
         android:layout_marginTop="60dp"
-        android:hint="username" />
+        android:hint="email"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/passwordETxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/usernameETxt"
+        android:layout_below="@id/emailETxt"
         android:layout_marginTop="15dp"
         android:hint="password"
         android:inputType="textPassword" />
@@ -41,20 +42,13 @@
         android:hint="confirm password"
         android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/emailETxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/confirmPasswordETxt"
-        android:layout_marginTop="15dp"
-        android:hint="email"
-        android:inputType="textEmailAddress" />
+
 
     <EditText
         android:id="@+id/firstNameETxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/emailETxt"
+        android:layout_below="@id/confirmPasswordETxt"
         android:layout_marginTop="15dp"
         android:hint="first name"
         android:inputType="textPersonName" />
@@ -68,23 +62,24 @@
         android:hint="last name"
         android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/loginBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lastNameETxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:text="login" />
 
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loginBtn"
+        android:layout_below="@id/lastNameETxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="register" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="register" />
+        android:text="login" />
 
 
 </RelativeLayout>
