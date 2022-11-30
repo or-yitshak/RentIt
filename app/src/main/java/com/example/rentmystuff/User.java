@@ -1,8 +1,6 @@
 package com.example.rentmystuff;
 
 public class User {
-    private String document_id;
-    private String email;
     private String password;
     private String first_name;
     private String last_name;
