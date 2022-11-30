@@ -1,24 +1,20 @@
 package com.example.rentmystuff;
 
 public class User {
+    private String document_id;
     private String email;
     private String password;
     private String first_name;
     private String last_name;
 
-    public User(String email, String password, String first_name, String last_name) {
-        this.email = email;
+    public User(){
+        //empty constructor
+    }
+
+    public User(String password, String first_name, String last_name) {
         this.password = password;
         this.first_name = first_name;
         this.last_name = last_name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
