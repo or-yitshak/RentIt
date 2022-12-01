@@ -107,17 +107,7 @@ public class MainActivity extends AppCompatActivity {
     private void login() {
         String email = email_etxt.getText().toString();
         String password = password_etxt.getText().toString();
-
-
-        String[] arr = {email, password};
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i].length() == 0) {
-                Toast.makeText(MainActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (!email.matches(email_pattern)) {
-            Toast.makeText(MainActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
-        } else {
+        if(inputChecks(email,password)) {
             prog_dialog.setMessage("Pleases Wait For Login To Complete");
             prog_dialog.setTitle("Login");
             prog_dialog.setCanceledOnTouchOutside(false);
@@ -128,20 +118,36 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         prog_dialog.dismiss();
-                        Toast.makeText(MainActivity.this, "Successfully Login", Toast.LENGTH_SHORT);
                         SendUserToNextActivity();
+                        Toast.makeText(MainActivity.this, "Successfully Login", Toast.LENGTH_SHORT).show();
                     }
                     else{
                         prog_dialog.dismiss();
-                        Log.d(TAG, "Incorrect password and email");
-                        Toast.makeText(MainActivity.this, "Incorrect password and email"+task.getException(), Toast.LENGTH_SHORT);
+                        Toast.makeText(MainActivity.this, "Incorrect password or email", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
     }
+
+    private boolean inputChecks(String email,String password){
+        String[] arr = {email,password};
+        for (int i = 0; i < arr.length ; i++) {
+            if (arr[i].length() ==0){
+                Toast.makeText(MainActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        if(!email.matches(email_pattern)){
+            Toast.makeText(MainActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private void SendUserToNextActivity() {
         Intent intent = new Intent(MainActivity.this,ActionTypeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }
