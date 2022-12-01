@@ -33,8 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email_etxt, password_etxt, confirm_password_etxt, fname_etxt, lname_etxt;
     private Button login_btn, register_btn;
     ProgressDialog prog_dialog;
-    private FirebaseAuth auth;
-    private FirebaseUser user;
+    private FirebaseAuth auth =FirebaseAuth.getInstance();;
+    private FirebaseUser fire_user;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -53,8 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         login_btn = findViewById(R.id.loginBtn);
         register_btn = findViewById(R.id.registerBtn);
         prog_dialog = new ProgressDialog(this);
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        fire_user = auth.getCurrentUser();
 
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,26 +65,24 @@ public class RegisterActivity extends AppCompatActivity {
                 String lname = lname_etxt.getText().toString();
 
 
-
-                if(inputChecks( email, password, confirm_password, fname, lname)){
+                if (inputChecks(email, password, confirm_password, fname, lname)) {
                     prog_dialog.setMessage("Pleases Wait For Registration To Complete");
                     prog_dialog.setTitle("Registration");
                     prog_dialog.setCanceledOnTouchOutside(false);
                     prog_dialog.show();
 
-                    auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 User new_user = new User(fname, lname);
                                 db.collection("users").document(email).set(new_user);
                                 prog_dialog.dismiss();
                                 SendUserToNextActivity();
                                 Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
+                            } else {
                                 prog_dialog.dismiss();
-                                Toast.makeText(RegisterActivity.this, "Failed to Register"+task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Failed to Register" + task.getException(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -121,27 +118,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean inputChecks(String email,String password,String confirm_password,String first_name,String last_name){
-        String[] arr = {email,password,confirm_password,first_name,last_name};
-        for (int i = 0; i < arr.length ; i++) {
-            if (arr[i].length() ==0){
+    private boolean inputChecks(String email, String password, String confirm_password, String first_name, String last_name) {
+        String[] arr = {email, password, confirm_password, first_name, last_name};
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].length() == 0) {
                 Toast.makeText(RegisterActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
-        if(!email.matches(email_pattern)){
+        if (!email.matches(email_pattern)) {
             Toast.makeText(RegisterActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(password.length() < 6){
+        } else if (password.length() < 6) {
             Toast.makeText(RegisterActivity.this, "Password is too short", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(!password.equals(confirm_password)){
+        } else if (!password.equals(confirm_password)) {
             Toast.makeText(RegisterActivity.this, "Password confirmation failed", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(!last_name.matches("[a-zA-Z]+") || !first_name.matches("[a-zA-Z]+")){
+        } else if (!last_name.matches("[a-zA-Z]+") || !first_name.matches("[a-zA-Z]+")) {
             Toast.makeText(RegisterActivity.this, "Full name contains illegal characters", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -150,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void SendUserToNextActivity() {
         Intent intent = new Intent(RegisterActivity.this, ActionTypeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

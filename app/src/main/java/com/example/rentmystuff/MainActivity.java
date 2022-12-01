@@ -31,10 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressDialog prog_dialog;
     private FirebaseAuth auth;
-    private FirebaseUser user;
+    private FirebaseUser fire_user;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
 
 
     @Override
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         password_etxt = findViewById(R.id.passwordETxt);
         prog_dialog = new ProgressDialog(this);
         auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        fire_user = auth.getCurrentUser();
 
         login_btn = findViewById(R.id.loginBtn);
         register_btn = findViewById(R.id.registerBtn);
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private void login() {
         String email = email_etxt.getText().toString();
         String password = password_etxt.getText().toString();
-        if(inputChecks(email,password)) {
+        if (inputChecks(email, password)) {
             prog_dialog.setMessage("Pleases Wait For Login To Complete");
             prog_dialog.setTitle("Login");
             prog_dialog.setCanceledOnTouchOutside(false);
@@ -116,12 +115,11 @@ public class MainActivity extends AppCompatActivity {
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         prog_dialog.dismiss();
                         SendUserToNextActivity();
                         Toast.makeText(MainActivity.this, "Successfully Login", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         prog_dialog.dismiss();
                         Toast.makeText(MainActivity.this, "Incorrect password or email", Toast.LENGTH_SHORT).show();
                     }
@@ -130,15 +128,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean inputChecks(String email,String password){
-        String[] arr = {email,password};
-        for (int i = 0; i < arr.length ; i++) {
-            if (arr[i].length() ==0){
+    private boolean inputChecks(String email, String password) {
+        String[] arr = {email, password};
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].length() == 0) {
                 Toast.makeText(MainActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
-        if(!email.matches(email_pattern)){
+        if (!email.matches(email_pattern)) {
             Toast.makeText(MainActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -146,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendUserToNextActivity() {
-        Intent intent = new Intent(MainActivity.this,ActionTypeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(MainActivity.this, ActionTypeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }
