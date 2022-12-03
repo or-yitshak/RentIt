@@ -1,59 +1,59 @@
 package com.example.rentmystuff;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.annotation.SuppressLint;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.rentmystuff.databinding.ActivityPostBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.UUID;
-
-import javax.annotation.Nullable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class PostActivity extends AppCompatActivity {
 
-    ImageButton upload_btn;
-    ImageView image_view;
-    Uri imageUri;
-    FirebaseStorage storage;
+    ActivityPostBinding binding;
 
-    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
+    Uri imageUri;
+    StorageReference storageReference;
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
-        upload_btn = findViewById(R.id.uploadButton);
-        image_view = findViewById(R.id.imageView);
-        storage = FirebaseStorage.getInstance();
-        image_view.setOnClickListener(new View.OnClickListener() {
+        binding = ActivityPostBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.selectImagebtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                ActivityResultLauncher.launch("Images/*");
+            public void onClick(View v) {
+
+
+                selectImage();
+
 
             }
         });
 
-
-        upload_btn.setOnClickListener(new View.OnClickListener() {
+        binding.uploadimagebtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
+
+
                 uploadImage();
+
             }
         });
 
@@ -61,35 +61,62 @@ public class PostActivity extends AppCompatActivity {
 
     private void uploadImage() {
 
-        if(imageUri != null){
-            StorageReference reference = storage.getReference().child("Images/" + UUID.randomUUID().toString());
-            reference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if(task.isSuccessful()) {
-                        //image uploaded
-                        Toast.makeText(PostActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                    } else{
-                        Toast.makeText(PostActivity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading File....");
+        progressDialog.show();
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
+        Date now = new Date();
+        String fileName = formatter.format(now);
+        storageReference = FirebaseStorage.getInstance().getReference("images/"+fileName);
+
+
+        storageReference.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        binding.firebaseimage.setImageURI(null);
+                        Toast.makeText(PostActivity.this,"Successfully Uploaded",Toast.LENGTH_SHORT).show();
+                        if (progressDialog.isShowing())
+                            progressDialog.dismiss();
 
                     }
-                }
-            });
-        }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+
+                        if (progressDialog.isShowing())
+                            progressDialog.dismiss();
+                        Toast.makeText(PostActivity.this,"Failed to Upload",Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
 
     }
 
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
-    ActivityResultLauncher<String> ActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri result) {
-                    if(result != null){
-                        image_view.setImageURI(result);
-                        imageUri = result;
-                    }
-                }
-            });
+    private void selectImage() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,100);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && data != null && data.getData() != null){
+
+            imageUri = data.getData();
+            binding.firebaseimage.setImageURI(imageUri);
 
 
+ }
+}
 }
