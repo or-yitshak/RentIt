@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RentMyStuff</string>
+    <string-array name="categories">
+        <item>Vehicle</item>
+        <item>Location</item>
+        <item>Other</item>
+    </string-array>
 </resources>

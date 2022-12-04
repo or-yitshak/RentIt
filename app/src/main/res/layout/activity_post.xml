@@ -1,58 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/imageView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".PostActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/newPostTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Firebase Cloud Storage"
-        android:textColor="@color/black"
-        android:textSize="26dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="New Post"
+        android:textSize="25dp" />
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newPostTextView"
+        android:layout_marginTop="15dp"
+        android:entries="@array/categories" />
+
+    <EditText
+        android:id="@+id/titleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categorySpinner"
+        android:layout_marginTop="15dp"
+        android:hint="title" />
+
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleEditText"
+        android:layout_marginTop="15dp"
+        android:hint="description"
+        android:lines="5" />
+
+
+    <TextView
+        android:id="@+id/imageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="Image:"
+        android:textSize="25dp"
+        android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/firebaseimage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/selectImagebtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="30dp"
+        android:id="@+id/firebaseImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/imageTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
-        android:id="@+id/selectImagebtn"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="32dp"
-        android:text="Select Image"
-        app:layout_constraintBottom_toTopOf="@+id/uploadimagebtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firebaseImage"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/selectImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Select Image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/uploadImageBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/uploadImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Upload Image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/selectImageBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/uploadimagebtn"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="168dp"
-        android:layout_marginHorizontal="16dp"
-        android:text="Upload Image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/postItBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/constraintsLayout"
+        android:text="POST IT" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
