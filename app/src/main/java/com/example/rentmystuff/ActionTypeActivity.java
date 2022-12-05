@@ -57,7 +57,7 @@ public class ActionTypeActivity extends AppCompatActivity {
         rent_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ActionTypeActivity.this, RentActivity.class);
+                Intent intent = new Intent(ActionTypeActivity.this, PostsListActivity.class);
                 startActivity(intent);
             }
         });
