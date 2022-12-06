@@ -41,6 +41,7 @@ public class PostsListActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         Post curr_post = doc.toObject(Post.class);
+                        curr_post.setPost_id(doc.getId());
                         posts.add(curr_post);
                     }
                     adapter = new PostsRecViewAdapter(PostsListActivity.this,posts);

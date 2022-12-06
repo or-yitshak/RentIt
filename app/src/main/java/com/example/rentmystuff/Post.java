@@ -1,6 +1,7 @@
 package com.example.rentmystuff;
 
 public class Post {
+    private String post_id;
     private String publisher_email;
     private String category;
     private String title;
@@ -56,5 +57,13 @@ public class Post {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPost_id() {
+        return post_id;
+    }
+
+    public void setPost_id(String post_id) {
+        this.post_id = post_id;
     }
 }
