@@ -7,6 +7,10 @@ public class Post {
     private String title;
     private String description;
     private String imageURL;
+    private String address;
+    private String price;
+    private String time_unit;
+
 
     public Post(String publisher_email, String category, String title, String description, String imageURL) {
         this.publisher_email = publisher_email;

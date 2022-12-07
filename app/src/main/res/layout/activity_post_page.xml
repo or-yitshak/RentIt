@@ -4,85 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostPageActivity"
-    android:padding="15dp">
+    android:padding="15dp"
+    tools:context=".PostPageActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title"
         android:id="@+id/titleTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:textSize="30dp"
-        android:layout_marginTop="40dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Category: "
-        android:id="@+id/categoryTxt"
-        android:textSize="20dp"
-        android:layout_below="@id/titleTxt"
-        android:layout_marginTop="25dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Publisher Name: "
-        android:id="@+id/publisherTxt"
-        android:textSize="20dp"
-        android:layout_below="@id/categoryTxt"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="40dp"
+        android:text="Title"
+        android:textSize="30dp" />
 
     <TextView
+        android:id="@+id/categoryTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Price: "
+        android:layout_below="@id/titleTxt"
+        android:layout_marginTop="25dp"
+        android:text="Category: "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/publisherTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categoryTxt"
+        android:layout_marginTop="10dp"
+        android:text="Publisher Name: "
+        android:textSize="20dp" />
+
+    <TextView
         android:id="@+id/priceTxt"
-        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/publisherTxt"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:text="Price: "
+        android:textSize="20dp" />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description: "
         android:id="@+id/descriptionTxt"
-        android:textSize="20dp"
-        android:layout_below="@id/priceTxt"
-        android:layout_marginTop="10dp"/>
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="content"
-        android:id="@+id/descriptionContentTxt"
-        android:textSize="20dp"
-        android:layout_toRightOf="@id/descriptionTxt"
         android:layout_below="@id/priceTxt"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:text="Description: "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/descriptionContentTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priceTxt"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/descriptionTxt"
+        android:text="content"
+        android:textSize="20dp" />
+
     <ImageView
+        android:id="@+id/imgView"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:src="@mipmap/ic_launcher"
         android:layout_below="@id/descriptionContentTxt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:id="@+id/imgView"/>
+        android:src="@mipmap/ic_launcher" />
 
     <Button
+        android:id="@+id/datesBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="choose dates"
         android:layout_below="@id/imgView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:id="@+id/datesBtn"/>
+        android:text="choose dates" />
 
     <Button
+        android:id="@+id/rentBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RENT IT"
         android:layout_below="@id/datesBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:id="@+id/rentBtn"/>
+        android:text="RENT IT" />
 
 
 </RelativeLayout>

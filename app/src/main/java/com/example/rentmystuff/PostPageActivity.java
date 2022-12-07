@@ -3,6 +3,7 @@ package com.example.rentmystuff;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityPostBinding;
@@ -15,6 +16,8 @@ import com.squareup.picasso.Picasso;
 public class PostPageActivity extends AppCompatActivity {
     private String post_id;
     private Post curr_post;
+
+//    private TextView title_txt;
 
     private ActivityPostPageBinding binding;
 
@@ -33,6 +36,8 @@ public class PostPageActivity extends AppCompatActivity {
             //The key argument here must match that used in the other activity
 //            Toast.makeText(this, post_id, Toast.LENGTH_SHORT).show();
         }
+        curr_post = new Post();
+//        title_txt = findViewById(R.id.titlePPTxt);
 
         db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -40,19 +45,23 @@ public class PostPageActivity extends AppCompatActivity {
                 curr_post = documentSnapshot.toObject(Post.class);
                 curr_post.setPost_id(post_id);
                 //failing
+//                System.out.println("#####################" + curr_post.getTitle() + curr_post.getPublisher_email());
+                binding.titleTxt.setText(curr_post.getTitle());
+                binding.categoryTxt.setText("Category: " + curr_post.getCategory());
+//        String publisher_full_name = db.collection("users").document(curr_post.getPublisher_email()).get().
+                binding.publisherTxt.setText("Publisher Name: " + curr_post.getPublisher_email());
+                binding.descriptionContentTxt.setText(curr_post.getDescription());
+                Picasso.get()
+                        .load(curr_post.getImageURL())
+                        .fit()
+                        .centerCrop()
+                        .into(binding.imgView);
+
             }
         });
+//        System.out.println("2222222222222222222" + curr_post.getTitle() + curr_post.getPublisher_email());
 
-//        binding.titleTxt.setText(curr_post.getTitle());
-//        binding.categoryTxt.setText("Category: " + curr_post.getCategory());
-////        String publisher_full_name = db.collection("users").document(curr_post.getPublisher_email()).get().
-//        binding.publisherTxt.setText("Publisher Name: " + curr_post.getPublisher_email());
-//        binding.descriptionContentTxt.setText(curr_post.getDescription());
-//        Picasso.get()
-//                .load(curr_post.getImageURL())
-//                .fit()
-//                .centerCrop()
-//                .into(binding.imgView);
+
 
 
 
