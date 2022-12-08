@@ -6,12 +6,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityPostsListBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,6 +30,32 @@ public class PostsListActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Post> posts;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    //Menu Bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.Profile:
+                Intent intent = new Intent(PostsListActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.logOutBtn:
+                Intent intent2 = new Intent(PostsListActivity.this, LoginActivity.class);
+                auth.signOut();
+                startActivity(intent2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

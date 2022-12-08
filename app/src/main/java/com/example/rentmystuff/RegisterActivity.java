@@ -1,32 +1,22 @@
 package com.example.rentmystuff;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -87,36 +77,18 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-//                User new_user = new User(fname, lname);
-//
-//                DocumentReference doc_ref = db.collection("users").document(email);
-//                doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            DocumentSnapshot document = task.getResult();
-//                            if (document.exists()) {
-//                                Log.d(TAG, "This email address is already in use!");
-//                                Toast.makeText(RegisterActivity.this, "This email address is already in use!", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                db.collection("users").document(email).set(new_user);
-//                                Log.d(TAG, "Registration completed successfully!");
-//                                Toast.makeText(RegisterActivity.this, "Registration completed successfully!", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(RegisterActivity.this,ActionTypeActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        } else {
-//                            Log.d(TAG, "Failed with: ", task.getException());
-//
-//                        }
-//                    }
-//                });
             }
         });
 
-
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     private boolean inputChecks(String email, String password, String confirm_password, String first_name, String last_name) {
         String[] arr = {email, password, confirm_password, first_name, last_name};
@@ -143,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void SendUserToNextActivity() {
-        Intent intent = new Intent(RegisterActivity.this, ActionTypeActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

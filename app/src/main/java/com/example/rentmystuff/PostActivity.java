@@ -9,14 +9,15 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityPostBinding;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,10 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -40,6 +37,30 @@ public class PostActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private String imageURL;
+
+    //Menu Bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.Profile:
+                Intent intent = new Intent(PostActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.logOutBtn:
+                Intent intent2 = new Intent(PostActivity.this, LoginActivity.class);
+                auth.signOut();
+                startActivity(intent2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +96,7 @@ public class PostActivity extends AppCompatActivity {
                 Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
                 db.collection("posts").add(new_post);
 
-                Intent intent = new Intent(PostActivity.this, ActionTypeActivity.class);
+                Intent intent = new Intent(PostActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });

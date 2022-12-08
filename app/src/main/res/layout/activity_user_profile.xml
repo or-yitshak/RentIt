@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserProfileActivity"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/Profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="My Profile"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/firstNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Profile"
+        android:layout_marginTop="25dp"
+        android:text="First name: "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/lastNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstNameTxt"
+        android:layout_marginTop="25dp"
+        android:text="Last name: "
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/emailTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lastNameTxt"
+        android:layout_marginTop="25dp"
+        android:text="Email: "
+        android:textSize="20dp" />
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/emailTxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Posts"
+        android:layout_below="@id/imgView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:id="@+id/postsBtn"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:layout_below="@id/postsBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:id="@+id/EditBtn"/>
+
+</RelativeLayout>

@@ -5,19 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ActionTypeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private TextView hello_txt;
 
@@ -27,6 +29,32 @@ public class ActionTypeActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth =FirebaseAuth.getInstance();;
     private FirebaseUser fire_user;
+
+    //Menu Bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.Profile:
+                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.logOutBtn:
+                Intent intent2 = new Intent(HomeActivity.this, LoginActivity.class);
+                auth.signOut();
+                startActivity(intent2);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +77,7 @@ public class ActionTypeActivity extends AppCompatActivity {
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ActionTypeActivity.this, PostActivity.class);
+                Intent intent = new Intent(HomeActivity.this, PostActivity.class);
                 startActivity(intent);
             }
         });
@@ -57,7 +85,7 @@ public class ActionTypeActivity extends AppCompatActivity {
         rent_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ActionTypeActivity.this, PostsListActivity.class);
+                Intent intent = new Intent(HomeActivity.this, PostsListActivity.class);
                 startActivity(intent);
             }
         });

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".LoginActivity"
     android:padding="20dp">
 
 
@@ -16,6 +16,7 @@
         android:layout_marginTop="20dp"
         android:id="@+id/welcomeTxt"
        />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
