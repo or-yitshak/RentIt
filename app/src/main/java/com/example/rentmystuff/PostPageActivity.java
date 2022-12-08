@@ -22,6 +22,7 @@ public class PostPageActivity extends AppCompatActivity {
     private ActivityPostPageBinding binding;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,23 +34,20 @@ public class PostPageActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             post_id = extras.getString("id");
-            //The key argument here must match that used in the other activity
-//            Toast.makeText(this, post_id, Toast.LENGTH_SHORT).show();
         }
         curr_post = new Post();
-//        title_txt = findViewById(R.id.titlePPTxt);
 
         db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 curr_post = documentSnapshot.toObject(Post.class);
                 curr_post.setPost_id(post_id);
-                //failing
-//                System.out.println("#####################" + curr_post.getTitle() + curr_post.getPublisher_email());
+
                 binding.titleTxt.setText(curr_post.getTitle());
                 binding.categoryTxt.setText("Category: " + curr_post.getCategory());
-//        String publisher_full_name = db.collection("users").document(curr_post.getPublisher_email()).get().
                 binding.publisherTxt.setText("Publisher Name: " + curr_post.getPublisher_email());
+                binding.addressTxt.setText("Address: " + curr_post.getAddress());
+                binding.priceTxt.setText("Price: " + curr_post.getPrice());
                 binding.descriptionContentTxt.setText(curr_post.getDescription());
                 Picasso.get()
                         .load(curr_post.getImageURL())
@@ -57,13 +55,16 @@ public class PostPageActivity extends AppCompatActivity {
                         .centerCrop()
                         .into(binding.imgView);
 
+                db.collection("users").document(curr_post.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        binding.publisherTxt.setText("Publisher Name: " + user.getFirst_name() + " " + user.getLast_name());
+                    }
+                });
+
+
             }
         });
-//        System.out.println("2222222222222222222" + curr_post.getTitle() + curr_post.getPublisher_email());
-
-
-
-
-
     }
 }

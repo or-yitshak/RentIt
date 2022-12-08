@@ -1,6 +1,7 @@
 package com.example.rentmystuff;
 
 import static androidx.core.content.ContextCompat.startActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -28,14 +29,14 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
     private ArrayList<Post> posts = new ArrayList<>();
 
     public PostsRecViewAdapter(Context context, ArrayList<Post> posts) {
-        this.context=context;
-        this.posts=posts;
+        this.context = context;
+        this.posts = posts;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(this.context).inflate(R.layout.posts_list_item,parent,false);
+        View v = LayoutInflater.from(this.context).inflate(R.layout.posts_list_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -46,6 +47,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         holder.post_name_txt.setText(current_post.getPublisher_email());
         Picasso.get()
                 .load(current_post.getImageURL())
+                .placeholder(R.mipmap.ic_launcher)
                 .fit()
                 .centerCrop()
                 .into(holder.post_image);
@@ -54,7 +56,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
             public void onClick(View view) {
                 Toast.makeText(context, current_post.getTitle() + " Selected!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(view.getContext(), PostPageActivity.class);
-                intent.putExtra("id",current_post.getPost_id());
+                intent.putExtra("id", current_post.getPost_id());
                 view.getContext().startActivity(intent);
             }
         });
@@ -71,7 +73,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         notifyDataSetChanged();//this way we will refresh the recycler view with the new data we received
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         /*
             this class responsible of holding the view items for every item in our
             recycler view
@@ -80,6 +82,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         private TextView post_name_txt;
         private ImageView post_image;
         private CardView parent;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             post_title_txt = itemView.findViewById(R.id.postTitleTxt);

@@ -68,8 +68,11 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String category = binding.categorySpinner.getSelectedItem().toString();
                 String title = binding.titleEditText.getText().toString();
+                String address = binding.addressEditText.getText().toString();
+                String price = binding.priceEditText.getText().toString();
                 String description = binding.descriptionEditText.getText().toString();
-                Post new_post = new Post(auth.getCurrentUser().getEmail().toString(),category, title, description, imageURL);
+
+                Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
                 db.collection("posts").add(new_post);
 
                 Intent intent = new Intent(PostActivity.this, ActionTypeActivity.class);
@@ -86,7 +89,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
-        if (imageUri == null){
+        if (imageUri == null) {
             Toast.makeText(PostActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -106,7 +109,7 @@ public class PostActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                if(progressDialog.isShowing()){
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
                 Toast.makeText(PostActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();

@@ -9,15 +9,17 @@ public class Post {
     private String imageURL;
     private String address;
     private String price;
-    private String time_unit;
+//    private String time_unit;
 
 
-    public Post(String publisher_email, String category, String title, String description, String imageURL) {
+    public Post(String publisher_email, String category, String title, String description, String imageURL, String address, String price) {
         this.publisher_email = publisher_email;
         this.category = category;
         this.title = title;
         this.description = description;
         this.imageURL = imageURL;
+        this.address = address;
+        this.price = price;
     }
 
     public String getPublisher_email() {
@@ -69,5 +71,21 @@ public class Post {
 
     public void setPost_id(String post_id) {
         this.post_id = post_id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }
