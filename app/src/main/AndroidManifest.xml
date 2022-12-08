@@ -16,22 +16,33 @@
         android:theme="@style/Theme.RentMyStuff"
         tools:targetApi="31">
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".MyPostsListActivity"
+            android:parentActivityName=".MyProfileActivity"
             android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".MyProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".PostPageActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".PostsListActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".PostsListActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -45,7 +56,8 @@
         </activity>
         <activity
             android:name=".PostActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -59,7 +71,8 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

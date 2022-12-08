@@ -5,6 +5,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -27,10 +28,12 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
 
     private Context context;
     private ArrayList<Post> posts = new ArrayList<>();
+    private String parent;
 
-    public PostsRecViewAdapter(Context context, ArrayList<Post> posts) {
+    public PostsRecViewAdapter(Context context, ArrayList<Post> posts, String parent) {
         this.context = context;
         this.posts = posts;
+        this.parent = parent;
     }
 
     @NonNull
@@ -54,10 +57,18 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, current_post.getTitle() + " Selected!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(view.getContext(), PostPageActivity.class);
-                intent.putExtra("id", current_post.getPost_id());
-                view.getContext().startActivity(intent);
+
+                if(parent.equals("PostsListActivity")){
+                    Toast.makeText(context, current_post.getTitle() + " Selected!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(view.getContext(), PostPageActivity.class);
+                    intent.putExtra("id", current_post.getPost_id());
+                    view.getContext().startActivity(intent);
+                }
+                else if(parent.equals("MyProfileActivity")){
+
+              }
+
+
             }
         });
 

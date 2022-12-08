@@ -34,6 +34,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        getSupportActionBar().setTitle("RegisterActivity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         email_etxt = findViewById(R.id.emailETxt);
         password_etxt = findViewById(R.id.passwordETxt);
         confirm_password_etxt = findViewById(R.id.confirmPasswordETxt);

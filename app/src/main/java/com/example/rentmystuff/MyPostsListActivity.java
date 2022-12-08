@@ -21,7 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class PostsListActivity extends AppCompatActivity {
+public class MyPostsListActivity extends AppCompatActivity {
     private RecyclerView posts_rec_view;
     private PostsRecViewAdapter adapter;
 
@@ -41,11 +41,11 @@ public class PostsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostsListActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(MyPostsListActivity.this, MyProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
-                Intent intent2 = new Intent(PostsListActivity.this, LoginActivity.class);
+                Intent intent2 = new Intent(MyPostsListActivity.this, LoginActivity.class);
                 auth.signOut();
                 startActivity(intent2);
                 return true;
@@ -53,20 +53,16 @@ public class PostsListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posts_list);
-
-        getSupportActionBar().setTitle("PostsListActivity");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_my_posts_list);
 
         posts_rec_view = findViewById(R.id.postsRecView);
         posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
         posts = new ArrayList<>();
 
-        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("posts").whereEqualTo("publisher_email",auth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -75,10 +71,10 @@ public class PostsListActivity extends AppCompatActivity {
                         curr_post.setPost_id(doc.getId());
                         posts.add(curr_post);
                     }
-                    adapter = new PostsRecViewAdapter(PostsListActivity.this,posts, "PostsListActivity");
+                    adapter = new PostsRecViewAdapter(MyPostsListActivity.this,posts, "MyProfileActivity");
                     posts_rec_view.setAdapter(adapter);
                 }else{
-                    Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyPostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
                 }
             }
         });

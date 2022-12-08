@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.rentmystuff.databinding.ActivityPostBinding;
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +42,7 @@ public class PostPageActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostPageActivity.this, UserProfileActivity.class);
+                Intent intent = new Intent(PostPageActivity.this, MyProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
@@ -60,6 +57,9 @@ public class PostPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_page);
+
+        getSupportActionBar().setTitle("PostPageActivity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         binding = ActivityPostPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

@@ -41,6 +41,10 @@ public class PostActivity extends AppCompatActivity {
     //Menu Bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        getSupportActionBar().setTitle("PostActivity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -50,7 +54,7 @@ public class PostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostActivity.this, UserProfileActivity.class);
+                Intent intent = new Intent(PostActivity.this, MyProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
