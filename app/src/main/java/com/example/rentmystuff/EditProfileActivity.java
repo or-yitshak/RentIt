@@ -16,8 +16,10 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.example.rentmystuff.databinding.ActivityEditProfileBinding;
 import com.example.rentmystuff.databinding.ActivityPostBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,9 +28,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public class PostActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
-    private ActivityPostBinding binding;
+
+    private ActivityEditProfileBinding binding;
 
     private Uri imageUri;
     private StorageReference storageReference;
@@ -42,7 +45,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getSupportActionBar().setTitle("PostActivity");
+        getSupportActionBar().setTitle("EditProfileActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         MenuInflater inflater = getMenuInflater();
@@ -54,11 +57,11 @@ public class PostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(EditProfileActivity.this, MyProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
-                Intent intent2 = new Intent(PostActivity.this, LoginActivity.class);
+                Intent intent2 = new Intent(EditProfileActivity.this, LoginActivity.class);
                 auth.signOut();
                 startActivity(intent2);
                 return true;
@@ -69,7 +72,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPostBinding.inflate(getLayoutInflater());
+        binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         storageReference = FirebaseStorage.getInstance().getReference("images");
@@ -88,25 +91,35 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        binding.postItBtn.setOnClickListener(new View.OnClickListener() {
+        binding.finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String category = binding.categorySpinner.getSelectedItem().toString();
-                String title = binding.titleEditText.getText().toString();
-                String address = binding.addressEditText.getText().toString();
-                String price = binding.priceEditText.getText().toString();
-                String description = binding.descriptionEditText.getText().toString();
 
-                Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
-                db.collection("posts").add(new_post);
-
-                Intent intent = new Intent(PostActivity.this, HomeActivity.class);
+                String first_name = binding.firstNameETxt.getText().toString();
+                String last_name = binding.lastNameETxt.getText().toString();
+                if(imageURL != null){
+                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("image_URL", imageURL);
+                }
+                if(first_name != "" && checkInput(first_name)) {
+                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("first_name", first_name);
+                }
+                if(last_name != "" && checkInput(last_name)) {
+                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("last_name", last_name);
+                }
+                Intent intent = new Intent(EditProfileActivity.this, MyProfileActivity.class);
                 startActivity(intent);
             }
         });
 
     }
 
+    private boolean checkInput(String st){
+        if (!st.matches("[a-zA-Z]+")) {
+            Toast.makeText(EditProfileActivity.this, "Full name contains illegal characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
@@ -114,10 +127,12 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
+
         if (imageUri == null) {
-            Toast.makeText(PostActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditProfileActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
             return;
         }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File....");
         progressDialog.show();
@@ -136,7 +151,7 @@ public class PostActivity extends AppCompatActivity {
                 if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
-                Toast.makeText(PostActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
                 taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
                         new OnCompleteListener<Uri>() {
                             @Override
@@ -165,9 +180,10 @@ public class PostActivity extends AppCompatActivity {
         if (requestCode == 100 && data != null && data.getData() != null) {
 
             imageUri = data.getData();
-            binding.firebaseImage.setImageURI(imageUri);
+            binding.imgView.setImageURI(imageUri);
 
 
         }
     }
+
 }

@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.rentmystuff.databinding.ActivityUserProfileBinding;
+import com.example.rentmystuff.databinding.ActivityMyProfileBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class MyProfileActivity extends AppCompatActivity {
-    private ActivityUserProfileBinding binding;
+    private ActivityMyProfileBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     @Override
@@ -23,13 +24,20 @@ public class MyProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MyProfileActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        binding = ActivityMyProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.postsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MyProfileActivity.this, MyPostsListActivity.class);
+                startActivity(intent);            }
+        });
+
+        binding.EditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent);            }
         });
 
@@ -40,6 +48,11 @@ public class MyProfileActivity extends AppCompatActivity {
                 binding.firstNameTxt.setText("First Name: " + user.getFirst_name());
                 binding.lastNameTxt.setText("Last Name: " + user.getLast_name());
                 binding.emailTxt.setText("Email: " + auth.getCurrentUser().getEmail());
+                Picasso.get()
+                        .load(user.getImage_URL())
+                        .fit()
+                        .centerCrop()
+                        .into(binding.imgView);
             }
         });
 

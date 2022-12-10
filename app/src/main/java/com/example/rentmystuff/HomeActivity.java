@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_action_type);
+        setContentView(R.layout.activity_home);
 
         fire_user = auth.getCurrentUser();
         post_btn = findViewById(R.id.postBtn);

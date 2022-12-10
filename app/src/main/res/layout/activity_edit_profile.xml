@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context=".EditProfileActivity">
+
+    <TextView
+        android:id="@+id/EditProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Edit Profile"
+        android:textSize="30dp" />
+
+
+    <TextView
+        android:id="@+id/firstNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/EditProfile"
+        android:layout_marginTop="25dp"
+        android:text="First name: "
+        android:textSize="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/firstNameTxt"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@id/firstNameTxt"
+        android:textSize="20dp"
+        android:id="@+id/firstNameETxt"/>
+
+
+    <TextView
+        android:id="@+id/lastNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstNameTxt"
+        android:layout_marginTop="25dp"
+        android:text="Last name: "
+        android:textSize="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/lastNameTxt"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@id/lastNameTxt"
+        android:textSize="20dp"
+        android:id="@+id/lastNameETxt"/>
+
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/lastNameTxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/ic_launcher"/>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgView"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/selectImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Select Image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/uploadImageBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/uploadImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Upload Image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/selectImageBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/finishBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/constraintsLayout"
+        android:text="Finish"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
