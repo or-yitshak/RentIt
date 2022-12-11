@@ -26,20 +26,24 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public class EditProfileActivity extends AppCompatActivity {
+/**
+ * This is the EditProfileActivity class.
+ * This can be reached and sends only to the "ProfileActivity" page.
+ */
 
+public class EditProfileActivity extends AppCompatActivity {
 
     private ActivityEditProfileBinding binding;
 
-    private Uri imageUri;
-    private StorageReference storageReference;
+    private Uri imageUri; // the URI of the profile image.
+    private StorageReference storageReference; // reference to the storage in firebase.
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ProgressDialog progressDialog;
 
-    private String imageURL;
+    private String imageURL; // URL of the profile image.
 
-    //Menu Bar
+    //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -51,9 +55,10 @@ public class EditProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    //logical code for the menu-bar:
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.Profile:
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 startActivity(intent);
@@ -73,8 +78,10 @@ public class EditProfileActivity extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //setting the storage reference to the firebase storage images:
         storageReference = FirebaseStorage.getInstance().getReference("images");
 
+        //allows user to choose image form the gallery:
         binding.selectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +89,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        //allows user to upload image to the app:
         binding.uploadImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,19 +97,19 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        //once user clicked, check all input is according to the constraints. If so, upload to the firestore:
         binding.finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String first_name = binding.firstNameETxt.getText().toString();
                 String last_name = binding.lastNameETxt.getText().toString();
-                if(imageURL != null){
+                if (imageURL != null) {
                     db.collection("users").document(auth.getCurrentUser().getEmail()).update("image_URL", imageURL);
                 }
-                if(first_name != "" && checkInput(first_name)) {
+                if (first_name != "" && checkInput(first_name)) {
                     db.collection("users").document(auth.getCurrentUser().getEmail()).update("first_name", first_name);
                 }
-                if(last_name != "" && checkInput(last_name)) {
+                if (last_name != "" && checkInput(last_name)) {
                     db.collection("users").document(auth.getCurrentUser().getEmail()).update("last_name", last_name);
                 }
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
@@ -111,19 +119,32 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkInput(String st){
+    /**
+     * This function checks the user input according to the constraints.
+     */
+    private boolean checkInput(String st) {
         if (!st.matches("[a-zA-Z]+")) {
             Toast.makeText(EditProfileActivity.this, "Full name contains illegal characters", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
+
+    /**
+     * This function return a string of the extension of the file (image file).
+     */
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
+    /**
+     * This function allows the user to upload an image to the app.
+     * It checks the imageUri and uploads it to the firebase storage.
+     * If the check fails, a message is displayed to the user asking him to select image.
+     * Otherwise the function uploads the image to the firebase storage and saves the link as a variable.
+     */
     private void uploadImage() {
 
         if (imageUri == null) {
@@ -131,18 +152,19 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
+        //Show progress window:
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File....");
         progressDialog.show();
 
-        StorageReference file_ref = storageReference.child(System.currentTimeMillis()
-                + "." + getFileExtension(imageUri));
-
-
+        //Getting the firebase storage:
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("images");
 
+        //Uploading the image to the firebase storage:
         UploadTask uploadTask = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri)).putFile(imageUri);
+
+        //If upload is successful, the link will be copied to the imageURL variable:
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -162,6 +184,9 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This function allows the user to choose an image from his gallery.
+     */
     private void openFileChooser() {
 
         Intent intent = new Intent();
@@ -171,6 +196,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This function stores the data inside the imageUri and displays it on the screen.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,9 +207,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             imageUri = data.getData();
             binding.imgView.setImageURI(imageUri);
-
-
         }
     }
-
 }

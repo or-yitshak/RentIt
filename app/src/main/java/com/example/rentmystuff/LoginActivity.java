@@ -18,24 +18,39 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This is the Login class.
+ * It is the first page (onCreate) of the application.
+ * From this page the user can be sent to the "RegisterActivity" or the "HomeActivity" page.
+ * It has four variables:
+ * 1) email_etxt - user edit email text.
+ * 2) password_etxt - user password edit text.
+ * 3) login_btn - user login button.
+ * 4) register_btn - user register button. When clicked, user is sent to the registration page.
+ */
+
 public class LoginActivity extends AppCompatActivity {
     private EditText email_etxt;
     private EditText password_etxt;
     private Button login_btn;
     private Button register_btn;
 
-    ProgressDialog prog_dialog;
-    private FirebaseAuth auth;
-    private FirebaseUser fire_user;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    private ProgressDialog prog_dialog; // small window during loading process.
+    private FirebaseAuth auth; // uses to register and login new users.
+    private FirebaseUser fire_user; //created by authentication (auth).
+    private FirebaseFirestore db = FirebaseFirestore.getInstance(); //the firebase database.
 
-
+    /**
+     * This function exits the app when pressed back.
+     */
     @Override
     public void onBackPressed() {
         System.exit(0);
     }
 
+    /**
+     * This function takes care of user login and registration when the app is opened.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         login_btn = findViewById(R.id.loginBtn);
         register_btn = findViewById(R.id.registerBtn);
 
-        //login button action
+        //Initializing the login button:
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,10 +74,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        //register button action
+        //Initializing the registration button:
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Intent moves the user from page "Login" to page "Register".
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
@@ -71,21 +87,28 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This function allows the user to login.
+     */
     private void login() {
         String email = email_etxt.getText().toString();
         String password = password_etxt.getText().toString();
+        //Checking that the email and password is properly inputted according to the constraints:
         if (inputChecks(email, password)) {
+            //Showing the dialog window to the user:
             prog_dialog.setMessage("Pleases Wait For Login To Complete");
             prog_dialog.setTitle("Login");
-            prog_dialog.setCanceledOnTouchOutside(false);
+            prog_dialog.setCanceledOnTouchOutside(false); //false so the user won't ruin the process.
             prog_dialog.show();
 
+            //using firebase authentication for the user login process:
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    //if login is successful send to home page:
                     if (task.isSuccessful()) {
                         prog_dialog.dismiss();
-                        SendUserToNextActivity();
+                        SendUserToNextActivity(); //sends to home page
                         Toast.makeText(LoginActivity.this, "Successfully Login", Toast.LENGTH_SHORT).show();
                     } else {
                         prog_dialog.dismiss();
@@ -96,6 +119,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function checks if the input is acceptable according to the constraints.
+     */
     private boolean inputChecks(String email, String password) {
         String[] arr = {email, password};
         for (int i = 0; i < arr.length; i++) {
@@ -104,6 +130,8 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         }
+        //email letter restriction.
+        String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         if (!email.matches(email_pattern)) {
             Toast.makeText(LoginActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
             return false;
@@ -111,6 +139,9 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * This function sends the user to the home page.
+     */
     private void SendUserToNextActivity() {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -21,9 +21,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This is the PostsListActivity class.
+ * It can be reached from the "HomeActivity" and "ProfileActivity" pages.
+ * From this page the user can reach the "PostPageActivity" page or go back to the "HomeActivity", "ProfileActivity" or "LoginActivity" pages.
+ */
+
 public class PostsListActivity extends AppCompatActivity {
-    private RecyclerView posts_rec_view;
-    private PostsRecViewAdapter adapter;
+    private RecyclerView posts_rec_view; //this allows us to show a list dynamically.
+    private PostsRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Post> posts;
@@ -31,7 +37,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     private String email = "";
 
-    //Menu Bar
+    //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -39,9 +45,10 @@ public class PostsListActivity extends AppCompatActivity {
         return true;
     }
 
+    //logical code for the menu-bar:
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.Profile:
                 Intent intent = new Intent(PostsListActivity.this, ProfileActivity.class);
                 startActivity(intent);
@@ -55,7 +62,9 @@ public class PostsListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * This is the onCreate function.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +73,7 @@ public class PostsListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PostsListActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //checking if the previous activity sent extra data:
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             email = extras.getString("email");
@@ -73,11 +83,14 @@ public class PostsListActivity extends AppCompatActivity {
         posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
         posts = new ArrayList<>();
 
-        if(email.equals("")) {
+        //if the email is empty, previous page was the "HomeActivity".
+        //If so, show all posts in the database.
+        if (email.equals("")) {
             db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
+                        //if task is successful, loop over all the posts and insert them in the array.
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             Post curr_post = doc.toObject(Post.class);
                             curr_post.setPost_id(doc.getId());
@@ -91,19 +104,22 @@ public class PostsListActivity extends AppCompatActivity {
                 }
             });
         }
+        //If email is not empty, previous page was from a Profile.
+        //If so, show all the posts of the current profile user:
         else {
-            db.collection("posts").whereEqualTo("publisher_email",email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("posts").whereEqualTo("publisher_email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()){
-                        for(QueryDocumentSnapshot doc : task.getResult()){
+                    //if task is successful, loop over all the posts and insert them in the array.
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             Post curr_post = doc.toObject(Post.class);
                             curr_post.setPost_id(doc.getId());
                             posts.add(curr_post);
                         }
-                        adapter = new PostsRecViewAdapter(PostsListActivity.this,posts, "MyProfileActivity");
+                        adapter = new PostsRecViewAdapter(PostsListActivity.this, posts, "MyProfileActivity");
                         posts_rec_view.setAdapter(adapter);
-                    }else{
+                    } else {
                         Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
                     }
                 }

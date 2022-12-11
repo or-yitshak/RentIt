@@ -22,21 +22,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
+/**
+ * This is the PostPageActivity class.
+ * It can be reached from the "PostListActivity" page.
+ * From this page the user can reach the "PostListActivity" or "InterestedActivity" pages.
+ */
+
 public class PostPageActivity extends AppCompatActivity {
-    private String post_id;
-    private Post curr_post;
 
-    private DatePickerDialog date_picker;
-
+    private String post_id; //id of the post.
+    private Post curr_post; // the current post object.
+    private DatePickerDialog date_picker; // allows the user to choose a date.
     private ActivityPostPageBinding binding;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    //Menu Bar
+    //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -44,9 +45,10 @@ public class PostPageActivity extends AppCompatActivity {
         return true;
     }
 
+    //logical code for the menu-bar:
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.Profile:
                 Intent intent = new Intent(PostPageActivity.this, ProfileActivity.class);
                 startActivity(intent);
@@ -59,6 +61,10 @@ public class PostPageActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * This is the onCreate function.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,17 +76,19 @@ public class PostPageActivity extends AppCompatActivity {
         binding = ActivityPostPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //initializing the date being picked:
         initDatePicker();
 
-
+        //this receives information from where the post came from.
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             post_id = extras.getString("id");
         }
 
-
+        //extracting the wanted post from the database:
         db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
+            //If post found in database, create a Post object and extract its information into the page:
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 curr_post = new Post();
                 curr_post = documentSnapshot.toObject(Post.class);
@@ -92,12 +100,15 @@ public class PostPageActivity extends AppCompatActivity {
                 binding.addressTxt.setText("Address: " + curr_post.getAddress());
                 binding.priceTxt.setText("Price: " + curr_post.getPrice());
                 binding.descriptionContentTxt.setText(curr_post.getDescription());
+
+                //Using Picasso to download an image using a URL:
                 Picasso.get()
                         .load(curr_post.getImageURL())
                         .fit()
                         .centerCrop()
                         .into(binding.imgView);
 
+                //extracting the users information:
                 db.collection("users").document(curr_post.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -106,7 +117,8 @@ public class PostPageActivity extends AppCompatActivity {
                     }
                 });
 
-                if(auth.getCurrentUser().getEmail().equals(curr_post.getPublisher_email())){
+                //Checking if the post is the current users post. If so show different set of buttons:
+                if (auth.getCurrentUser().getEmail().equals(curr_post.getPublisher_email())) {
                     binding.rentBtn.setVisibility(View.GONE);
                     binding.datesBtn.setVisibility(View.GONE);
                     binding.interestedBtn.setVisibility(View.VISIBLE);
@@ -114,6 +126,7 @@ public class PostPageActivity extends AppCompatActivity {
             }
         });
 
+        //If the date button was clicked, open date picker:
         binding.datesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +134,8 @@ public class PostPageActivity extends AppCompatActivity {
             }
         });
 
+        // Creating a new "Interested" object and uploading it to the database as a sub-collection of the current post:
+        // When the proccess is over, the user is sent to the "PostListActivity".
         binding.rentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,31 +148,32 @@ public class PostPageActivity extends AppCompatActivity {
             }
         });
 
+        //This button will appear only if it is the current users post.
+        // This leads the user to the "InterestedActivity".
         binding.interestedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostPageActivity.this, InterestedActivity.class);
+                Intent intent = new Intent(PostPageActivity.this, ProfileListActivity.class);
                 intent.putExtra("id", post_id);
                 startActivity(intent);
             }
         });
-
-
     }
 
-    private void initDatePicker()
-    {
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener()
-        {
+    /**
+     * This function determines what dates can be chosen for the user.
+     */
+    private void initDatePicker() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day)
-            {
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String date = makeDateString(day, month, year);
                 binding.datesBtn.setText(date);
             }
         };
 
+        //creating a new calender:
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
@@ -165,47 +181,62 @@ public class PostPageActivity extends AppCompatActivity {
 
         int style = AlertDialog.THEME_HOLO_LIGHT;
 
+        //initializing the date picker to be the current days date.
         date_picker = new DatePickerDialog(this, style, dateSetListener, year, month, day);
-        //datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
 
     }
-    private String makeDateString(int day, int month, int year)
-    {
+
+    /**
+     * changing the date to type <String>:
+     *
+     * @param day   - the current day.
+     * @param month - the current month.
+     * @param year  - the current year.
+     */
+
+    private String makeDateString(int day, int month, int year) {
         return getMonthFormat(month) + " " + day + " " + year;
     }
 
-    private String getMonthFormat(int month)
-    {
-        if(month == 1)
+    /**
+     * This function matches numbers to the corresponding months.
+     *
+     * @param month - the wanted month (int).
+     */
+    private String getMonthFormat(int month) {
+        if (month == 1)
             return "JAN";
-        if(month == 2)
+        if (month == 2)
             return "FEB";
-        if(month == 3)
+        if (month == 3)
             return "MAR";
-        if(month == 4)
+        if (month == 4)
             return "APR";
-        if(month == 5)
+        if (month == 5)
             return "MAY";
-        if(month == 6)
+        if (month == 6)
             return "JUN";
-        if(month == 7)
+        if (month == 7)
             return "JUL";
-        if(month == 8)
+        if (month == 8)
             return "AUG";
-        if(month == 9)
+        if (month == 9)
             return "SEP";
-        if(month == 10)
+        if (month == 10)
             return "OCT";
-        if(month == 11)
+        if (month == 11)
             return "NOV";
-        if(month == 12)
+        if (month == 12)
             return "DEC";
 
         //default should never happen
         return "JAN";
     }
-    public void openDatePicker()
-    {
+
+    /**
+     * This function shows the date picked.
+     */
+    public void openDatePicker() {
         date_picker.show();
     }
 }

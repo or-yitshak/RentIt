@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcomeTxt"
         android:layout_marginTop="60dp"
-        android:hint="email"
+        android:hint="Email"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/emailETxt"
         android:layout_marginTop="15dp"
-        android:hint="password"
+        android:hint="Password"
         android:inputType="textPassword" />
 
     <EditText
@@ -39,9 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordETxt"
         android:layout_marginTop="15dp"
-        android:hint="confirm password"
+        android:hint="Confirm Password"
         android:inputType="textPassword" />
-
 
 
     <EditText
@@ -50,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/confirmPasswordETxt"
         android:layout_marginTop="15dp"
-        android:hint="first name"
+        android:hint="First Name"
         android:inputType="textPersonName" />
 
     <EditText
@@ -59,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/firstNameETxt"
         android:layout_marginTop="15dp"
-        android:hint="last name"
+        android:hint="Last Name"
         android:inputType="textPersonName" />
 
 
