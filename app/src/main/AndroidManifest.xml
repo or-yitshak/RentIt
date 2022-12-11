@@ -16,22 +16,24 @@
         android:theme="@style/Theme.RentMyStuff"
         tools:targetApi="31">
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".InterestedActivity"
+            android:parentActivityName=".HomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MyPostsListActivity"
-            android:exported="false"
-            android:parentActivityName=".MyProfileActivity">
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".ProfileActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <activity
-            android:name=".MyProfileActivity"
+            android:name=".ProfileActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity">
             <meta-data

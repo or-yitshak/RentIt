@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,7 +55,7 @@ public class PostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
@@ -98,7 +99,13 @@ public class PostActivity extends AppCompatActivity {
                 String description = binding.descriptionEditText.getText().toString();
 
                 Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
-                db.collection("posts").add(new_post);
+                db.collection("posts").add(new_post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        db.collection("posts").document(documentReference.getId()).update("post_id",documentReference.getId());
+
+                    }
+                });
 
                 Intent intent = new Intent(PostActivity.this, HomeActivity.class);
                 startActivity(intent);

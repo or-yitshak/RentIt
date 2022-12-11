@@ -66,7 +66,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
                 }
                 else if(parent.equals("MyProfileActivity")){
 
-              }
+                }
 
 
             }
@@ -84,7 +84,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         notifyDataSetChanged();//this way we will refresh the recycler view with the new data we received
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         /*
             this class responsible of holding the view items for every item in our
             recycler view

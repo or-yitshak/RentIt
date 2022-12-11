@@ -17,9 +17,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityEditProfileBinding;
-import com.example.rentmystuff.databinding.ActivityPostBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,7 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(EditProfileActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
@@ -106,7 +104,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if(last_name != "" && checkInput(last_name)) {
                     db.collection("users").document(auth.getCurrentUser().getEmail()).update("last_name", last_name);
                 }
-                Intent intent = new Intent(EditProfileActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }
         });

@@ -29,6 +29,8 @@ public class PostsListActivity extends AppCompatActivity {
     private ArrayList<Post> posts;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    private String email = "";
+
     //Menu Bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,7 +43,7 @@ public class PostsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(PostsListActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(PostsListActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
@@ -62,25 +64,50 @@ public class PostsListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PostsListActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            email = extras.getString("email");
+        }
+
         posts_rec_view = findViewById(R.id.postsRecView);
         posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
         posts = new ArrayList<>();
 
-        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot doc : task.getResult()){
-                        Post curr_post = doc.toObject(Post.class);
-                        curr_post.setPost_id(doc.getId());
-                        posts.add(curr_post);
+        if(email.equals("")) {
+            db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            Post curr_post = doc.toObject(Post.class);
+                            curr_post.setPost_id(doc.getId());
+                            posts.add(curr_post);
+                        }
+                        adapter = new PostsRecViewAdapter(PostsListActivity.this, posts, "PostsListActivity");
+                        posts_rec_view.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
                     }
-                    adapter = new PostsRecViewAdapter(PostsListActivity.this,posts, "PostsListActivity");
-                    posts_rec_view.setAdapter(adapter);
-                }else{
-                    Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+            });
+        }
+        else {
+            db.collection("posts").whereEqualTo("publisher_email",email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        for(QueryDocumentSnapshot doc : task.getResult()){
+                            Post curr_post = doc.toObject(Post.class);
+                            curr_post.setPost_id(doc.getId());
+                            posts.add(curr_post);
+                        }
+                        adapter = new PostsRecViewAdapter(PostsListActivity.this,posts, "MyProfileActivity");
+                        posts_rec_view.setAdapter(adapter);
+                    }else{
+                        Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

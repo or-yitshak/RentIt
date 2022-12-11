@@ -21,12 +21,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class MyPostsListActivity extends AppCompatActivity {
-    private RecyclerView posts_rec_view;
-    private PostsRecViewAdapter adapter;
+public class InterestedActivity extends AppCompatActivity {
+    private String post_id;
+    private RecyclerView interested_rec_view;
+    private ProfileRecViewAdapter adapter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private ArrayList<Post> posts;
+    private ArrayList<Interested> interested_list;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     //Menu Bar
@@ -41,11 +42,11 @@ public class MyPostsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(MyPostsListActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(InterestedActivity.this, HomeActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:
-                Intent intent2 = new Intent(MyPostsListActivity.this, LoginActivity.class);
+                Intent intent2 = new Intent(InterestedActivity.this, LoginActivity.class);
                 auth.signOut();
                 startActivity(intent2);
                 return true;
@@ -56,25 +57,33 @@ public class MyPostsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_posts_list);
+        setContentView(R.layout.activity_interested);
 
-        posts_rec_view = findViewById(R.id.postsRecView);
-        posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
-        posts = new ArrayList<>();
 
-        db.collection("posts").whereEqualTo("publisher_email",auth.getCurrentUser().getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        getSupportActionBar().setTitle("PostsListActivity");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            post_id = extras.getString("id");
+        }
+
+        interested_rec_view = findViewById(R.id.interestedRecView);
+        interested_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
+        interested_list = new ArrayList<Interested>();
+
+        db.collection("posts").document(post_id).collection("interested").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot doc : task.getResult()){
-                        Post curr_post = doc.toObject(Post.class);
-                        curr_post.setPost_id(doc.getId());
-                        posts.add(curr_post);
+                        Interested curr_inter = doc.toObject(Interested.class);
+                        interested_list.add(curr_inter);
                     }
-                    adapter = new PostsRecViewAdapter(MyPostsListActivity.this,posts, "MyProfileActivity");
-                    posts_rec_view.setAdapter(adapter);
+                    adapter = new ProfileRecViewAdapter(InterestedActivity.this, interested_list, "MyProfileActivity");
+                    interested_rec_view.setAdapter(adapter);
                 }else{
-                    Toast.makeText(MyPostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InterestedActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
                 }
             }
         });

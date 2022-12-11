@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.Profile:
-                Intent intent = new Intent(HomeActivity.this, MyProfileActivity.class);
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logOutBtn:

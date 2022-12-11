@@ -13,10 +13,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
     private ActivityMyProfileBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private String email = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,29 +29,42 @@ public class MyProfileActivity extends AppCompatActivity {
         binding = ActivityMyProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            email = extras.getString("email");
+        } else{
+            email = auth.getCurrentUser().getEmail();
+        }
+
+        if(auth.getCurrentUser().getEmail().equals(email)){
+            binding.EditBtn.setVisibility(View.VISIBLE);
+        }
+
         binding.postsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyProfileActivity.this, MyPostsListActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, PostsListActivity.class);
+                intent.putExtra("email", email);
                 startActivity(intent);            }
         });
 
         binding.EditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyProfileActivity.this, EditProfileActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent);            }
         });
 
-        db.collection("users").document(auth.getCurrentUser().getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 binding.firstNameTxt.setText("First Name: " + user.getFirst_name());
                 binding.lastNameTxt.setText("Last Name: " + user.getLast_name());
-                binding.emailTxt.setText("Email: " + auth.getCurrentUser().getEmail());
+                binding.emailTxt.setText("Email: " + email);
                 Picasso.get()
                         .load(user.getImage_URL())
+                        .placeholder(R.mipmap.ic_launcher)
                         .fit()
                         .centerCrop()
                         .into(binding.imgView);
