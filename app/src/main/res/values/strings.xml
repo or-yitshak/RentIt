@@ -2,7 +2,20 @@
     <string name="app_name">RentMyStuff</string>
     <string-array name="categories">
         <item>Vehicle</item>
-        <item>Location</item>
+        <item>Electronics</item>
+        <item>Fashion</item>
+        <item>Collectibles and Art</item>
+        <item>Sport</item>
+        <item>Extreme Sport</item>
+        <item>Health &amp; Beauty</item>
+        <item>Home &amp; Garden</item>
+        <item>Repairment Tools</item>
+        <item>Kitchen</item>
+        <item>Home</item>
+        <item>Swimming Pool</item>
+        <item>Entertainment</item>
+        <item>School</item>
+        <item>Office</item>
         <item>Other</item>
     </string-array>
 </resources>
