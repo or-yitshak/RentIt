@@ -76,14 +76,10 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (parent.equals("PostsListActivity")) {
-                    Toast.makeText(context, current_post.getTitle() + " Selected!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(view.getContext(), PostPageActivity.class);
-                    intent.putExtra("id", current_post.getPost_id());
-                    view.getContext().startActivity(intent);
-                } else if (parent.equals("MyProfileActivity")) {
-
-                }
+                Toast.makeText(context, current_post.getTitle() + " Selected!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), PostPageActivity.class);
+                intent.putExtra("id", current_post.getPost_id());
+                view.getContext().startActivity(intent);
             }
         });
 

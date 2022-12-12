@@ -62,7 +62,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User curr_user = documentSnapshot.toObject(User.class);
-                holder.name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name());
+                holder.name_txt.setText("Full Name: " + curr_user.getFirst_name() + " " + curr_user.getLast_name());
                 //Using Picasso library to download an image using URL:
                 Picasso.get()
                         .load(curr_user.getImage_URL())
@@ -72,7 +72,8 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
                         .into(holder.profile_image);
             }
         });
-        holder.email_txt.setText(curr_inter.getEmail());
+        holder.email_txt.setText("Email: " + curr_inter.getEmail());
+        holder.date_txt.setText("Date: " + curr_inter.getDate());
 
         //Sending the user to the correct profile page when clicking on the interested user:
         holder.parent.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +100,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name_txt;
         private TextView email_txt;
+        private TextView date_txt;
         private ImageView profile_image;
         private CardView parent;
 
@@ -106,6 +108,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             super(itemView);
             name_txt = itemView.findViewById(R.id.nameTxt);
             email_txt = itemView.findViewById(R.id.emailTxt);
+            date_txt = itemView.findViewById(R.id.dateTxt);
             profile_image = itemView.findViewById(R.id.profileImageView);
             parent = itemView.findViewById(R.id.parent);
         }

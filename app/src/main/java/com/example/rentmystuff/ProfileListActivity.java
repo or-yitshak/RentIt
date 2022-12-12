@@ -3,6 +3,7 @@ package com.example.rentmystuff;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -67,8 +68,8 @@ public class ProfileListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_list);
 
-//        getSupportActionBar().setTitle("PostsListActivity");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("ProfileListActivity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //checking if the previous activity sent extra data:
         Bundle extras = getIntent().getExtras();
@@ -78,7 +79,7 @@ public class ProfileListActivity extends AppCompatActivity {
 
         //initializing the recycler view and the interested list:
         interested_rec_view = findViewById(R.id.interestedRecView);
-        interested_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
+        interested_rec_view.setLayoutManager(new LinearLayoutManager(this));
         interested_list = new ArrayList<Interested>();
 
         //extracting from the firestore database the interested users information:

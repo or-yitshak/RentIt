@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
 
@@ -18,26 +18,38 @@
             android:id="@+id/nameTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/profileImageView"
             android:layout_marginTop="7dp"
-            android:text="Full Name" />
+            android:text="Full Name"
+            android:layout_marginLeft="10dp"
+            />
 
         <TextView
             android:id="@+id/emailTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/nameTxt"
-            android:layout_centerHorizontal="true"
             android:text="Email"
-            android:layout_marginStart="5dp"/>
+            android:layout_toRightOf="@id/profileImageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            />
+
+        <TextView
+            android:id="@+id/dateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emailTxt"
+            android:text="Date"
+            android:layout_toRightOf="@id/profileImageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            />
 
         <ImageView
             android:id="@+id/profileImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_below="@id/emailTxt"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@mipmap/ic_launcher"/>
 
     </RelativeLayout>
