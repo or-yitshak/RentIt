@@ -122,7 +122,7 @@ public class PostActivity extends AppCompatActivity {
 
                     }
                 });
-
+                Toast.makeText(PostActivity.this, "Your post has been published", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PostActivity.this, HomeActivity.class);
                 startActivity(intent);
             }

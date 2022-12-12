@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -139,10 +140,15 @@ public class PostPageActivity extends AppCompatActivity {
         binding.rentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (binding.datesBtn.getText().toString().equals("choose dates")){
+                    Toast.makeText(PostPageActivity.this, "Please select date for rent", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Interested in = new Interested(auth.getCurrentUser().getEmail(), binding.datesBtn.getText().toString());
                 db.collection("posts")
                         .document(post_id)
                         .collection("interested").add(in);
+                Toast.makeText(PostPageActivity.this, "Your request has been submitted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PostPageActivity.this, PostsListActivity.class);
                 startActivity(intent);
             }
