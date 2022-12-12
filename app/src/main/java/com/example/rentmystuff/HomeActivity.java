@@ -36,6 +36,10 @@ public class HomeActivity extends AppCompatActivity {
     ;
     private FirebaseUser fire_user;
 
+    @Override
+    public void onBackPressed() {
+    }
+
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
