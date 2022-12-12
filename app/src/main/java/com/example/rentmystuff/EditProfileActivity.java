@@ -124,7 +124,6 @@ public class EditProfileActivity extends AppCompatActivity {
      */
     private boolean checkInput(String st) {
         if (!st.matches("[a-zA-Z]+")) {
-            Toast.makeText(EditProfileActivity.this, "Full name contains illegal characters", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

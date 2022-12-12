@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle("MyProfileActivity");
+        getSupportActionBar().setTitle("ProfileActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         binding = ActivityMyProfileBinding.inflate(getLayoutInflater());
