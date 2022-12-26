@@ -2,6 +2,7 @@ package com.example.rentmystuff;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 
 public class PostsListActivity extends AppCompatActivity {
     private RecyclerView posts_rec_view; //this allows us to show a list dynamically.
+    private SearchView posts_search_view;
     private PostsRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,6 +83,22 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         posts_rec_view = findViewById(R.id.postsRecView);
+        posts_search_view = findViewById(R.id.postsSearchView);
+        posts_search_view.clearFocus();
+        posts_search_view.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        posts_search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
         posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
         posts = new ArrayList<>();
 

@@ -2,11 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/Notification"
+<!--    <item android:id="@+id/search"-->
+<!--        android:icon="@drawable/ic_search"-->
+<!--        android:title="Search"-->
+<!--        app:showAsAction="always"-->
+<!--        android:visible="false"-->
+<!--        app:actionViewClass="android.widget.SearchView" />-->
+
+    <item android:id="@+id/notification"
         android:icon="@drawable/ic_bell"
         android:title="Notification"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always"/>
+
 
     <item android:id="@+id/Profile"
         android:icon="@drawable/ic_profile_icon"
@@ -16,6 +23,9 @@
 
     <item android:id="@+id/logOutBtn"
         android:title="Logout"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        />
+
+
 
 </menu>

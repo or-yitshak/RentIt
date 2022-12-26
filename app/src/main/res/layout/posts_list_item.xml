@@ -22,10 +22,19 @@
             android:text="Post title" />
 
         <TextView
-            android:id="@+id/postNameTxt"
+            android:id="@+id/postCategoryTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/postTitleTxt"
+            android:layout_centerHorizontal="true"
+            android:text="Post category"
+            android:layout_marginStart="5dp"/>
+
+        <TextView
+            android:id="@+id/postNameTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/postCategoryTxt"
             android:layout_centerHorizontal="true"
             android:text="Post name"
             android:layout_marginStart="5dp"/>

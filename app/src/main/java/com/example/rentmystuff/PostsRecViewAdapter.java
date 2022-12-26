@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,12 +21,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapter.ViewHolder> {
+public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapter.ViewHolder> implements Filterable {
     /**
      * This is the PostsRecViewAdapter class, it extends the RecyclerView adapter.
      * It adapts the post list item XML to the recycler view.
@@ -32,7 +37,10 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
 
     private Context context; //reference to the activity that uses the adapter.
     private ArrayList<Post> posts; // array of posts.
+    private ArrayList<Post> posts_full;
     private String parent; //string representing from which class we arrived to postListView.
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Constructor for the PostsRecViewAdapter class.
@@ -41,6 +49,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         this.context = context;
         this.posts = posts;
         this.parent = parent;
+        this.posts_full = new ArrayList<>(posts);//points to another place in the memory
     }
 
 
@@ -63,7 +72,14 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post current_post = this.posts.get(position);
         holder.post_title_txt.setText(current_post.getTitle());
-        holder.post_name_txt.setText(current_post.getPublisher_email());
+        holder.post_category_txt.setText(current_post.getCategory());
+        db.collection("users").document(current_post.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User curr_user = documentSnapshot.toObject(User.class);
+                holder.post_name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name());
+            }
+        });
         //Using Picasso library to download an image using URL:
         Picasso.get()
                 .load(current_post.getImageURL())
@@ -93,8 +109,48 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         return posts.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return posts_filter;
+    }
 
-//    public void setPosts(ArrayList<Post> posts) {
+    private Filter posts_filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            ArrayList<Post> filtered_posts = new ArrayList<>();
+            if(charSequence == null || charSequence.length()==0){
+                filtered_posts.addAll(posts_full);
+            }else {
+                String filter_pattern = charSequence.toString().toLowerCase().trim();
+                for(Post p : posts_full){
+                    boolean in_title = p.getTitle().toLowerCase().contains(filter_pattern);
+                    boolean in_category = p.getCategory().toLowerCase().contains(filter_pattern);
+                    db.collection("users").document(p.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User curr_user = documentSnapshot.toObject(User.class);
+                            String full_name = curr_user.getFirst_name() + " " + curr_user.getLast_name();
+                        }
+                    });
+                    if(in_title || in_category){
+                        filtered_posts.add(p);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filtered_posts;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            posts.clear();
+            posts.addAll((ArrayList)filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    //    public void setPosts(ArrayList<Post> posts) {
 //        this.posts = posts;
 //        notifyDataSetChanged();//this way we will refresh the recycler view with the new data we received
 //    }
@@ -105,6 +161,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView post_title_txt;
+        private TextView post_category_txt;
         private TextView post_name_txt;
         private ImageView post_image;
         private CardView parent;
@@ -113,6 +170,7 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
             super(itemView);
             post_title_txt = itemView.findViewById(R.id.postTitleTxt);
             post_name_txt = itemView.findViewById(R.id.postNameTxt);
+            post_category_txt = itemView.findViewById(R.id.postCategoryTxt);
             post_image = itemView.findViewById(R.id.postImageView);
             parent = itemView.findViewById(R.id.parent);
         }

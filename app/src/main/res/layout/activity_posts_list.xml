@@ -4,12 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostsListActivity"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:context=".PostsListActivity">
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/postsSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_view_bg"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search here..." />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/postsRecView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/postsRecView"/>
+        android:layout_below="@id/postsSearchView"
+        android:layout_marginTop="10dp" />
+
 
 </RelativeLayout>
