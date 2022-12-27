@@ -125,13 +125,6 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
                 for(Post p : posts_full){
                     boolean in_title = p.getTitle().toLowerCase().contains(filter_pattern);
                     boolean in_category = p.getCategory().toLowerCase().contains(filter_pattern);
-                    db.collection("users").document(p.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            User curr_user = documentSnapshot.toObject(User.class);
-                            String full_name = curr_user.getFirst_name() + " " + curr_user.getLast_name();
-                        }
-                    });
                     if(in_title || in_category){
                         filtered_posts.add(p);
                     }

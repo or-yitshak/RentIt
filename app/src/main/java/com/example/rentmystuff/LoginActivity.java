@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
      * This function allows the user to login.
      */
     private void login() {
-        String email = email_etxt.getText().toString();
+        String email = email_etxt.getText().toString().trim();
         String password = password_etxt.getText().toString();
         //Checking that the email and password is properly inputted according to the constraints:
         if (inputChecks(email, password)) {
