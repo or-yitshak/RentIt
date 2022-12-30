@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rentmystuff.databinding.ActivityPostPageBinding;
+import com.example.rentmystuff.databinding.ActivityProfileListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,7 +33,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     private Context context; //reference to the activity that uses the adapter.
     private ArrayList<Interested> interested_list; // An ArrayList of interested users.
     private String parent; //string representing from which class we arrived to profileListView.
-
+    private ActivityProfileListBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
@@ -84,6 +89,44 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
                 view.getContext().startActivity(intent);
             }
         });
+
+        if(curr_inter.isApproved()){
+            holder.check_btn.setVisibility(View.GONE);
+            holder.close_btn.setVisibility(View.GONE);
+        }
+
+        holder.check_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("posts").document(curr_inter.getPost_id())
+                        .collection("interested")
+                        .document(curr_inter.getInterested_id())
+                        .update("approved",true);
+                holder.check_btn.setVisibility(view.GONE);
+                holder.close_btn.setVisibility(view.GONE);
+
+            }
+        });
+
+        holder.close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.check_btn.setVisibility(view.GONE);
+                holder.close_btn.setVisibility(view.GONE);
+                interested_list.remove(curr_inter);
+                notifyDataSetChanged();
+                db.collection("posts")
+                        .document(curr_inter.getPost_id())
+                        .collection("interested")
+                        .document(curr_inter.getInterested_id()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(context, "the request has been removed!", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+            }
+        });
     }
 
     /**
@@ -94,6 +137,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         return interested_list.size();
     }
 
+
     /**
      * This class is responsible for holding the view items of every item in our recycler view.
      */
@@ -103,6 +147,8 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         private TextView date_txt;
         private ImageView profile_image;
         private CardView parent;
+        private ImageButton check_btn;
+        private ImageButton close_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -111,6 +157,8 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             date_txt = itemView.findViewById(R.id.dateTxt);
             profile_image = itemView.findViewById(R.id.profileImageView);
             parent = itemView.findViewById(R.id.parent);
+            check_btn = itemView.findViewById(R.id.checkBtn);
+            close_btn = itemView.findViewById(R.id.closeBtn);
         }
     }
 }

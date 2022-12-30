@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -144,10 +145,24 @@ public class PostPageActivity extends AppCompatActivity {
                     Toast.makeText(PostPageActivity.this, "Please select date for rent", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Interested in = new Interested(auth.getCurrentUser().getEmail(), binding.datesBtn.getText().toString());
+
+                Interested in = new Interested(auth.getCurrentUser().getEmail(), binding.datesBtn.getText().toString(), post_id);
+                if(in.isDatePassed()){
+                    Toast.makeText(PostPageActivity.this, "Please select legitimate date for rent", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 db.collection("posts")
                         .document(post_id)
-                        .collection("interested").add(in);
+                        .collection("interested").add(in).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                db.collection("posts")
+                                        .document(post_id)
+                                        .collection("interested")
+                                        .document(documentReference.getId())
+                                        .update("interested_id",documentReference.getId());
+                            }
+                        });
                 Toast.makeText(PostPageActivity.this, "Your request has been submitted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PostPageActivity.this, PostsListActivity.class);
                 startActivity(intent);
@@ -174,7 +189,7 @@ public class PostPageActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String date = makeDateString(day, month, year);
+                String date = day + "/" + month + "/" + year;
                 binding.datesBtn.setText(date);
             }
         };
@@ -192,52 +207,6 @@ public class PostPageActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * changing the date to type <String>:
-     *
-     * @param day   - the current day.
-     * @param month - the current month.
-     * @param year  - the current year.
-     */
-
-    private String makeDateString(int day, int month, int year) {
-        return getMonthFormat(month) + " " + day + " " + year;
-    }
-
-    /**
-     * This function matches numbers to the corresponding months.
-     *
-     * @param month - the wanted month (int).
-     */
-    private String getMonthFormat(int month) {
-        if (month == 1)
-            return "JAN";
-        if (month == 2)
-            return "FEB";
-        if (month == 3)
-            return "MAR";
-        if (month == 4)
-            return "APR";
-        if (month == 5)
-            return "MAY";
-        if (month == 6)
-            return "JUN";
-        if (month == 7)
-            return "JUL";
-        if (month == 8)
-            return "AUG";
-        if (month == 9)
-            return "SEP";
-        if (month == 10)
-            return "OCT";
-        if (month == 11)
-            return "NOV";
-        if (month == 12)
-            return "DEC";
-
-        //default should never happen
-        return "JAN";
-    }
 
     /**
      * This function shows the date picked.

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -90,7 +91,16 @@ public class ProfileListActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Interested curr_inter = doc.toObject(Interested.class);
-                        interested_list.add(curr_inter);
+                        if(curr_inter.isDatePassed()){
+                            interested_list.remove(curr_inter);
+                            db.collection("posts")
+                                    .document(curr_inter.getPost_id())
+                                    .collection("interested")
+                                    .document(curr_inter.getInterested_id()).delete();
+                        }
+                        else{
+                            interested_list.add(curr_inter);
+                        }
                     }
                     adapter = new ProfileRecViewAdapter(ProfileListActivity.this, interested_list, "MyProfileActivity");
                     interested_rec_view.setAdapter(adapter);

@@ -52,6 +52,24 @@
             android:layout_height="100dp"
             android:src="@mipmap/ic_launcher"/>
 
+
+        <ImageButton
+            android:id="@+id/checkBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_check_24"
+            android:background="@drawable/green_circle"
+            android:layout_alignParentRight="true"/>
+
+        <ImageButton
+            android:id="@+id/closeBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:background="@drawable/red_circle"
+            android:layout_below="@id/checkBtn"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
