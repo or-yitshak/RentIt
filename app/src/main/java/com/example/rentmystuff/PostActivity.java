@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -22,10 +23,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 /**
  * This is the PostActivity class.
@@ -44,6 +47,7 @@ public class PostActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private String imageURL;
+    String post_id = "";
 
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
@@ -86,7 +90,28 @@ public class PostActivity extends AppCompatActivity {
         //initializing binding (instead of initializing the XML page variables):
         binding = ActivityPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Bundle extras = getIntent().getExtras();
 
+        if (extras != null) {
+            post_id = extras.getString("id");
+            binding.newPostTextView.setText("Edit Post");
+            db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Post post = documentSnapshot.toObject(Post.class);
+                    binding.titleEditText.setHint(post.getTitle());
+                    binding.addressEditText.setHint(post.getAddress());
+                    binding.priceEditText.setHint(post.getPrice());
+                    binding.descriptionEditText.setHint(post.getDescription());
+                    Picasso.get()
+                            .load(post.getImageURL())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .fit()
+                            .centerCrop()
+                            .into(binding.firebaseImage);
+                }
+            });
+        }
         //getting the storage reference and creating an "image" directory inside.
         storageReference = FirebaseStorage.getInstance().getReference("images");
 
@@ -106,6 +131,7 @@ public class PostActivity extends AppCompatActivity {
 
         //Initialing the "Post-it" button. On click, extract the post information into the database:
         binding.postItBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
                 String category = binding.categorySpinner.getSelectedItem().toString();
@@ -113,18 +139,58 @@ public class PostActivity extends AppCompatActivity {
                 String address = binding.addressEditText.getText().toString();
                 String price = binding.priceEditText.getText().toString();
                 String description = binding.descriptionEditText.getText().toString();
+                //checking if the previous activity sent extra data:
 
-                Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
-                db.collection("posts").add(new_post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        db.collection("posts").document(documentReference.getId()).update("post_id", documentReference.getId());
-
+                if(post_id == "") {
+                    Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
+                    if(checkInput(new_post)) {
+                        db.collection("posts").add(new_post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                db.collection("posts").document(documentReference.getId()).update("post_id", documentReference.getId());
+                            }
+                        });
+                        Toast.makeText(PostActivity.this, "Your post has been published", Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(PostActivity.this, "Error, please make sure you enter all the details", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                });
-                Toast.makeText(PostActivity.this, "Your post has been published", Toast.LENGTH_SHORT).show();
+                } else{
+                    if (imageURL != null) {
+                        db.collection("posts").document(post_id).update("image_URL", imageURL);
+                    }
+                    if (!title.equals("")) {
+                        db.collection("posts").document(post_id).update("title", title);
+                    }
+                    if (!address.equals("")) {
+                        db.collection("posts").document(post_id).update("address", address);
+                    }
+                    if (!category.equals("")) {
+                        db.collection("posts").document(post_id).update("category", category);
+                    }
+                    if (!price.equals("")) {
+                        db.collection("posts").document(post_id).update("price", price);
+                    }
+                    if (!description.equals("")) {
+                        db.collection("posts").document(post_id).update("description", description);
+                    }
+                    if(!category.equals("Please select category")){
+                        db.collection("posts").document(post_id).update("category", category);
+                    }
+                    Toast.makeText(PostActivity.this, "Your post has been updated", Toast.LENGTH_SHORT).show();
+
+                }
                 Intent intent = new Intent(PostActivity.this, HomeActivity.class);
                 startActivity(intent);
+            }
+
+            private boolean checkInput(Post post) {
+                if (post.getTitle().equals("") || post.getAddress().equals("") ||
+                    post.getCategory().equals("Please select category") || post.getPrice().equals("") ||
+                    post.getDescription().equals("") ) {
+                    return false;
+                }
+                return true;
             }
         });
 

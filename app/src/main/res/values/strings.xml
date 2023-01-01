@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">RentMyStuff</string>
+    <string name="new_post">New Post</string>
     <string-array name="categories">
+        <item>Please select category</item>
         <item>Vehicle</item>
         <item>Electronics</item>
         <item>Fashion</item>

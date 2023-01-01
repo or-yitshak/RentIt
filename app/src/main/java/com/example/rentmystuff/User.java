@@ -1,5 +1,7 @@
 package com.example.rentmystuff;
 
+import java.util.ArrayList;
+
 /**
  * This is the User class.
  * It represents a user in the application.
@@ -9,6 +11,7 @@ public class User {
     private String first_name;
     private String last_name;
     private String image_URL;
+    private ArrayList<String> notification;
 
     /**
      * Empty Constructor for the User class:

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
 import com.example.rentmystuff.databinding.ActivityProfileListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -94,6 +95,15 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             holder.check_btn.setVisibility(View.GONE);
             holder.close_btn.setVisibility(View.GONE);
         }
+        final String[] title = new String[2];
+        db.collection("posts").document(curr_inter.getPost_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Post pst = documentSnapshot.toObject(Post.class);
+                title[0] = pst.getTitle();
+//                        title[1] = pst.getPublisher_email();
+            }
+        });
 
         holder.check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +115,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
                 holder.check_btn.setVisibility(view.GONE);
                 holder.close_btn.setVisibility(view.GONE);
 
+                addNotification(curr_inter, true);
             }
         });
 
@@ -125,8 +136,26 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
 
                             }
                         });
+                addNotification(curr_inter, false);
             }
         });
+    }
+
+    private void addNotification(Interested curr_inter, boolean flag){
+        Notification notification = new Notification(curr_inter.getPost_id(), flag);
+        notification.setDate(curr_inter.getDate());
+        db.collection("users")
+                .document(curr_inter.getEmail())
+                .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        db.collection("users")
+                                .document(curr_inter.getEmail())
+                                .collection("notifications")
+                                .document(documentReference.getId())
+                                .update("notification_id",documentReference.getId());
+                    }
+                });
     }
 
     /**

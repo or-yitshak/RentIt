@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="New Post"
+            android:text="@string/new_post"
             android:textSize="25dp" />
 
         <Spinner

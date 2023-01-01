@@ -9,7 +9,7 @@
 <!--        android:visible="false"-->
 <!--        app:actionViewClass="android.widget.SearchView" />-->
 
-    <item android:id="@+id/notification"
+    <item android:id="@+id/notificationBtn"
         android:icon="@drawable/ic_bell"
         android:title="Notification"
         app:showAsAction="always"/>

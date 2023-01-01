@@ -21,10 +21,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 /**
  * This is the EditProfileActivity class.
@@ -97,6 +99,23 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        String email = auth.getCurrentUser().getEmail();
+        db.collection("users").document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                binding.firstNameETxt.setHint(user.getFirst_name());
+                binding.lastNameETxt.setHint(user.getLast_name());
+
+                //Using Picasso library to download an image using URL:
+                Picasso.get()
+                        .load(user.getImage_URL())
+                        .placeholder(R.mipmap.ic_launcher)
+                        .fit()
+                        .centerCrop()
+                        .into(binding.imgView);
+            }
+        });
         //once user clicked, check all input is according to the constraints. If so, upload to the firestore:
         binding.finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -124,6 +124,7 @@ public class PostPageActivity extends AppCompatActivity {
                     binding.rentBtn.setVisibility(View.GONE);
                     binding.datesBtn.setVisibility(View.GONE);
                     binding.interestedBtn.setVisibility(View.VISIBLE);
+                    binding.EditBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -175,6 +176,14 @@ public class PostPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PostPageActivity.this, ProfileListActivity.class);
+                intent.putExtra("id", post_id);
+                startActivity(intent);
+            }
+        });
+        binding.EditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostPageActivity.this, PostActivity.class);
                 intent.putExtra("id", post_id);
                 startActivity(intent);
             }
