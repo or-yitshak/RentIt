@@ -139,10 +139,11 @@ public class PostActivity extends AppCompatActivity {
                 String address = binding.addressEditText.getText().toString();
                 String price = binding.priceEditText.getText().toString();
                 String description = binding.descriptionEditText.getText().toString();
+                String priceCategory = binding.priceSpinner.getSelectedItem().toString();
                 //checking if the previous activity sent extra data:
 
                 if(post_id == "") {
-                    Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price);
+                    Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price, priceCategory);
                     if(checkInput(new_post)) {
                         db.collection("posts").add(new_post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
@@ -174,8 +175,11 @@ public class PostActivity extends AppCompatActivity {
                     if (!description.equals("")) {
                         db.collection("posts").document(post_id).update("description", description);
                     }
-                    if(!category.equals("Please select category")){
+                    if(!category.equals("Category")){
                         db.collection("posts").document(post_id).update("category", category);
+                    }
+                    if(!priceCategory.equals("Currency")){
+                        db.collection("posts").document(post_id).update("price_category", priceCategory);
                     }
                     Toast.makeText(PostActivity.this, "Your post has been updated", Toast.LENGTH_SHORT).show();
 

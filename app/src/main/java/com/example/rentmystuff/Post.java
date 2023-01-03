@@ -14,6 +14,7 @@ public class Post {
     private String imageURL; // URL of the post image.
     private String address; // address of the posts user.
     private String price; // price of the post.
+    private String price_category;
 
     /**
      * Empty Constructor of the post class.
@@ -24,7 +25,7 @@ public class Post {
     /**
      * Constructor of the post class.
      */
-    public Post(String publisher_email, String category, String title, String description, String imageURL, String address, String price) {
+    public Post(String publisher_email, String category, String title, String description, String imageURL, String address, String price, String priceCategory) {
         this.publisher_email = publisher_email;
         this.category = category;
         this.title = title;
@@ -32,6 +33,7 @@ public class Post {
         this.imageURL = imageURL;
         this.address = address;
         this.price = price;
+        this.price_category = priceCategory;
     }
 
     /**
@@ -67,6 +69,14 @@ public class Post {
 
     public String getPrice() {
         return price;
+    }
+
+    public String getPrice_category() {
+        return price_category;
+    }
+
+    public void setPrice_category(String price_category) {
+        this.price_category = price_category;
     }
 
     /**

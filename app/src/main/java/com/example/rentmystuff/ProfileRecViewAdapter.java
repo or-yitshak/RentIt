@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * This is the ProfileRecViewAdapter class.
@@ -145,17 +146,17 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         Notification notification = new Notification(curr_inter.getPost_id(), flag);
         notification.setDate(curr_inter.getDate());
         db.collection("users")
-                .document(curr_inter.getEmail())
-                .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        db.collection("users")
-                                .document(curr_inter.getEmail())
-                                .collection("notifications")
-                                .document(documentReference.getId())
-                                .update("notification_id",documentReference.getId());
-                    }
-                });
+            .document(curr_inter.getEmail())
+            .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                db.collection("users")
+                        .document(curr_inter.getEmail())
+                        .collection("notifications")
+                        .document(documentReference.getId())
+                        .update("notification_id",documentReference.getId());
+            }
+        });
     }
 
     /**

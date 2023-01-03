@@ -100,7 +100,7 @@ public class PostPageActivity extends AppCompatActivity {
                 binding.categoryTxt.setText("Category: " + curr_post.getCategory());
 //                binding.publisherTxt.setText("Publisher Name: " + curr_post.getPublisher_email());
                 binding.addressTxt.setText("Address: " + curr_post.getAddress());
-                binding.priceTxt.setText("Price: " + curr_post.getPrice());
+                binding.priceTxt.setText("Price: " + curr_post.getPrice()+ curr_post.getPrice_category());
                 binding.descriptionContentTxt.setText(curr_post.getDescription());
 
                 //Using Picasso to download an image using a URL:
@@ -152,6 +152,7 @@ public class PostPageActivity extends AppCompatActivity {
                     Toast.makeText(PostPageActivity.this, "Please select legitimate date for rent", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 db.collection("posts")
                         .document(post_id)
                         .collection("interested").add(in).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -162,8 +163,26 @@ public class PostPageActivity extends AppCompatActivity {
                                         .collection("interested")
                                         .document(documentReference.getId())
                                         .update("interested_id",documentReference.getId());
+                                in.setInterested_id(documentReference.getId());
+                                Notification notification = new Notification(post_id, false);
+                                notification.setDate(binding.datesBtn.getText().toString());
+                                notification.setInterested_id(in.getInterested_id());
+
+                                db.collection("users")
+                                        .document(curr_post.getPublisher_email())
+                                        .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                db.collection("users")
+                                                        .document(in.getEmail())
+                                                        .collection("notifications")
+                                                        .document(documentReference.getId())
+                                                        .update("notification_id",documentReference.getId());
+                                            }
+                                        });
                             }
                         });
+
                 Toast.makeText(PostPageActivity.this, "Your request has been submitted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PostPageActivity.this, PostsListActivity.class);
                 startActivity(intent);

@@ -45,12 +45,23 @@
             android:layout_marginTop="15dp"
             android:hint="address" />
 
+        <Spinner
+            android:id="@+id/priceSpinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addressEditText"
+            android:layout_toRightOf="@id/priceEditText"
+            android:layout_marginTop="15dp"
+            android:layout_alignBottom="@id/priceEditText"
+            android:entries="@array/priceCategories" />
+
         <EditText
             android:id="@+id/priceEditText"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/addressEditText"
             android:layout_marginTop="15dp"
+            android:inputType="numberDecimal"
             android:hint="price" />
 
 

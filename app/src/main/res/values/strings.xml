@@ -2,7 +2,7 @@
     <string name="app_name">RentMyStuff</string>
     <string name="new_post">New Post</string>
     <string-array name="categories">
-        <item>Please select category</item>
+        <item>Category</item>
         <item>Vehicle</item>
         <item>Electronics</item>
         <item>Fashion</item>
@@ -19,5 +19,12 @@
         <item>School</item>
         <item>Office</item>
         <item>Other</item>
+    </string-array>
+    <string-array name="priceCategories">
+        <item>Currency</item>
+        <item>ILS</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>BTC</item>
     </string-array>
 </resources>

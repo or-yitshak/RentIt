@@ -19,9 +19,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This is the ProfileRecViewAdapter class.
@@ -42,6 +45,7 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
      */
     public NotificationRecViewAdapter(Context context, ArrayList<Notification> notifications) {
         this.context = context;
+        Collections.sort(notifications, Collections.reverseOrder());//displaying latest notifications first
         this.notification_list = notifications;
     }
 
@@ -67,24 +71,50 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
                 Post post = doc.toObject(Post.class);
                 post_id = post.getPost_id();
                 publisher_email[0] = post.getPublisher_email();
-                //Using Picasso library to download an image using URL:
-                Picasso.get()
+                if(!auth.getCurrentUser().getEmail().equals(publisher_email[0])) {
+                    //Using Picasso library to download an image using URL:
+                    Picasso.get()
                         .load(post.getImageURL())
                         .placeholder(R.mipmap.ic_launcher)
                         .fit()
                         .centerCrop()
                         .into(holder.profile_image);
-                db.collection("users").document(publisher_email[0]).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User curr_user = documentSnapshot.toObject(User.class);
-                        String approved = "";
-                        if(curr_noti.isApproved()) approved = "approved";
-                        else approved = "declined";
-                        holder.name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name() + " has " + approved + " your request");
-                        holder.email_txt.setText("Email: " + publisher_email[0]);
-                    }
-                });
+                    db.collection("users").document(publisher_email[0]).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User curr_user = documentSnapshot.toObject(User.class);
+                            String approved = "";
+                            if (curr_noti.isApproved()) approved = "approved";
+                            else approved = "declined";
+                            holder.name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name() + " has " + approved + " your request");
+                            holder.email_txt.setText("Email: " + publisher_email[0]);
+                        }
+                    });
+                }
+                else{
+                    db.collection("posts").document(post_id).collection("interested").document(curr_noti.getInterested_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Interested interested = documentSnapshot.toObject(Interested.class);
+                            db.collection("users").document(interested.getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User inter = documentSnapshot.toObject(User.class);
+                                    Picasso.get()
+                                            .load(inter.getImage_URL())
+                                            .placeholder(R.mipmap.ic_launcher)
+                                            .fit()
+                                            .centerCrop()
+                                            .into(holder.profile_image);
+
+                                    holder.name_txt.setText(inter.getFirst_name() + " " + inter.getLast_name() + " wants to rent your " + post.getTitle());
+                                    holder.email_txt.setText("Email: " + interested.getEmail());
+
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
 
