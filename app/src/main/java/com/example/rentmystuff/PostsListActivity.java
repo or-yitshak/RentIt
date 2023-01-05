@@ -61,6 +61,10 @@ public class PostsListActivity extends AppCompatActivity {
                 auth.signOut();
                 startActivity(intent2);
                 return true;
+            case R.id.notificationBtn:
+                Intent intent3 = new Intent(PostsListActivity.this, NotificationActivity.class);
+                startActivity(intent3);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

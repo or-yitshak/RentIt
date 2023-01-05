@@ -137,6 +137,8 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
 
                             }
                         });
+                holder.check_btn.setVisibility(view.GONE);
+                holder.close_btn.setVisibility(view.GONE);
                 addNotification(curr_inter, false);
             }
         });

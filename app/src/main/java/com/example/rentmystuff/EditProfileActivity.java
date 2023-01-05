@@ -70,6 +70,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 auth.signOut();
                 startActivity(intent2);
                 return true;
+            case R.id.notificationBtn:
+                Intent intent3 = new Intent(EditProfileActivity.this, NotificationActivity.class);
+                startActivity(intent3);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,6 +110,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 User user = documentSnapshot.toObject(User.class);
                 binding.firstNameETxt.setHint(user.getFirst_name());
                 binding.lastNameETxt.setHint(user.getLast_name());
+                binding.phoneNumber.setHint(user.getPhone_number());
 
                 //Using Picasso library to download an image using URL:
                 Picasso.get()
@@ -122,14 +127,19 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String first_name = binding.firstNameETxt.getText().toString();
                 String last_name = binding.lastNameETxt.getText().toString();
+                String phone_number = binding.phoneNumber.getText().toString();
+                String email = auth.getCurrentUser().getEmail();
                 if (imageURL != null) {
-                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("image_URL", imageURL);
+                    db.collection("users").document(email).update("image_URL", imageURL);
                 }
-                if (first_name != "" && checkInput(first_name)) {
-                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("first_name", first_name);
+                if (!first_name.equals("") && checkInput(first_name)) {
+                    db.collection("users").document(email).update("first_name", first_name);
                 }
-                if (last_name != "" && checkInput(last_name)) {
-                    db.collection("users").document(auth.getCurrentUser().getEmail()).update("last_name", last_name);
+                if (!last_name.equals("") && checkInput(last_name)) {
+                    db.collection("users").document(email).update("last_name", last_name);
+                }
+                if(!phone_number.equals("") && phone_number.length() <= 15){
+                    db.collection("users").document(email).update("phone_number", phone_number);
                 }
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 startActivity(intent);

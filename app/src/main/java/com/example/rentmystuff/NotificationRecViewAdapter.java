@@ -112,9 +112,11 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
 
                                 }
                             });
+
                         }
                     });
                 }
+
             }
         });
 
@@ -129,9 +131,9 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
                 view.getContext().startActivity(intent);
             }
         });
-
         holder.check_btn.setVisibility(View.GONE);
         holder.close_btn.setVisibility(View.GONE);
+
     }
 
 

@@ -55,12 +55,31 @@
         android:textSize="20dp"
         android:id="@+id/lastNameETxt"/>
 
+    <TextView
+        android:id="@+id/phoneNumberTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lastNameTxt"
+        android:layout_marginTop="25dp"
+        android:text="Phone number: "
+        android:textSize="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/lastNameETxt"
+        android:layout_toRightOf="@id/phoneNumberTxt"
+        android:layout_alignBaseline="@id/phoneNumberTxt"
+        android:id="@+id/phoneNumber"
+        android:inputType="phone"
+        />
 
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_below="@id/lastNameTxt"
+        android:layout_below="@id/phoneNumber"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:src="@mipmap/ic_launcher"/>
