@@ -124,7 +124,7 @@ public class EditProfileActivity extends AppCompatActivity {
         binding.verificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditProfileActivity.this, VerificationActivity.class);
+                Intent intent = new Intent(EditProfileActivity.this, VerActivity.class);
                 startActivity(intent);
             }
         });

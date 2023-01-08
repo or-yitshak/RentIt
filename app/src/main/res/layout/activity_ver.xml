@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="25dp">
+    tools:context=".VerActivity"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_phone_number"
@@ -16,8 +18,8 @@
         android:id="@+id/editPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:hint="Enter phone number" />
+        android:hint="Enter phone number"
+        android:inputType="phone" />
 
     <TextView
         android:id="@+id/textVerificationCode"
@@ -46,5 +48,6 @@
         android:layout_height="wrap_content"
         android:text="Verify Code"
         android:visibility="gone" />
+
 
 </LinearLayout>
