@@ -121,6 +121,13 @@ public class EditProfileActivity extends AppCompatActivity {
                         .into(binding.imgView);
             }
         });
+        binding.verificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditProfileActivity.this, VerificationActivity.class);
+                startActivity(intent);
+            }
+        });
         //once user clicked, check all input is according to the constraints. If so, upload to the firestore:
         binding.finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override

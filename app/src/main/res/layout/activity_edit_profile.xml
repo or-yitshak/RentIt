@@ -75,11 +75,22 @@
         android:inputType="phone"
         />
 
+    <Button
+        android:id="@+id/verificationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Verify Phone Number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_below="@id/phoneNumberTxt"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_below="@id/phoneNumber"
+        android:layout_below="@id/verificationBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:src="@mipmap/ic_launcher"/>
