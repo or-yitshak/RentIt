@@ -33,7 +33,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    ;
     private FirebaseUser fire_user;
 
     @Override

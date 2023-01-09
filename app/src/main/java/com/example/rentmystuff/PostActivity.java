@@ -30,23 +30,27 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * This is the PostActivity class.
  * It can be reached from the "Home" page.
  * Once the user clicks "Post it" he is sent back to the "HomeActivity" page.
  */
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity implements Observer {
 
     private ActivityPostBinding binding; //This allows us to reach all XML views, without re-initializing the variables.
 
     private Uri imageUri; //This contains the image content.
-    private StorageReference storageReference; //reference to the firebase storage that contain the images uploaded.
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+//    private StorageReference storageReference; //reference to the firebase storage that contain the images uploaded.
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ProgressDialog progressDialog;
-
-    private String imageURL;
+//
+//    private String imageURL;
+    private PostModel post_model;
     String post_id = "";
 
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
@@ -74,7 +78,7 @@ public class PostActivity extends AppCompatActivity {
             //send to the "LoginActivity" page and log user out of account:
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(PostActivity.this, LoginActivity.class);
-                auth.signOut();
+                post_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -92,6 +96,8 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initializing binding (instead of initializing the XML page variables):
+        post_model = new PostModel();
+        post_model.addObserver(this);
         binding = ActivityPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Bundle extras = getIntent().getExtras();
@@ -99,25 +105,9 @@ public class PostActivity extends AppCompatActivity {
         if (extras != null) {
             post_id = extras.getString("id");
             binding.newPostTextView.setText("Edit Post");
-            db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Post post = documentSnapshot.toObject(Post.class);
-                    binding.titleEditText.setHint(post.getTitle());
-                    binding.addressEditText.setHint(post.getAddress());
-                    binding.priceEditText.setHint(post.getPrice());
-                    binding.descriptionEditText.setHint(post.getDescription());
-                    Picasso.get()
-                            .load(post.getImageURL())
-                            .placeholder(R.mipmap.ic_launcher)
-                            .fit()
-                            .centerCrop()
-                            .into(binding.firebaseImage);
-                }
-            });
+            post_model.setHint(post_id);
         }
         //getting the storage reference and creating an "image" directory inside.
-        storageReference = FirebaseStorage.getInstance().getReference("images");
 
         binding.selectImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,58 +137,10 @@ public class PostActivity extends AppCompatActivity {
                 //checking if the previous activity sent extra data:
 
                 if(post_id == "") {
-                    Post new_post = new Post(auth.getCurrentUser().getEmail().toString(), category, title, description, imageURL, address, price, priceCategory);
-                    if(checkInput(new_post)) {
-                        db.collection("posts").add(new_post).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                db.collection("posts").document(documentReference.getId()).update("post_id", documentReference.getId());
-                            }
-                        });
-                        Toast.makeText(PostActivity.this, "Your post has been published", Toast.LENGTH_SHORT).show();
-                    } else{
-                        Toast.makeText(PostActivity.this, "Error, please make sure you enter all the details", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    post_model.postIt(category, title, description, address, price, priceCategory);
                 } else{
-                    if (imageURL != null) {
-                        db.collection("posts").document(post_id).update("image_URL", imageURL);
-                    }
-                    if (!title.equals("")) {
-                        db.collection("posts").document(post_id).update("title", title);
-                    }
-                    if (!address.equals("")) {
-                        db.collection("posts").document(post_id).update("address", address);
-                    }
-                    if (!category.equals("")) {
-                        db.collection("posts").document(post_id).update("category", category);
-                    }
-                    if (!price.equals("")) {
-                        db.collection("posts").document(post_id).update("price", price);
-                    }
-                    if (!description.equals("")) {
-                        db.collection("posts").document(post_id).update("description", description);
-                    }
-                    if(!category.equals("Category")){
-                        db.collection("posts").document(post_id).update("category", category);
-                    }
-                    if(!priceCategory.equals("Currency")){
-                        db.collection("posts").document(post_id).update("price_category", priceCategory);
-                    }
-                    Toast.makeText(PostActivity.this, "Your post has been updated", Toast.LENGTH_SHORT).show();
-
+                    post_model.editPost(category, title, description, address, price, priceCategory,post_id);
                 }
-                Intent intent = new Intent(PostActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-
-            private boolean checkInput(Post post) {
-                if (post.getTitle().equals("") || post.getAddress().equals("") ||
-                    post.getCategory().equals("Please select category") || post.getPrice().equals("") ||
-                    post.getDescription().equals("") ) {
-                    return false;
-                }
-                return true;
             }
         });
 
@@ -229,32 +171,10 @@ public class PostActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File....");
         progressDialog.show();
-
-        //Getting the firebase storage:
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("images");
-
+        String image_name = System.currentTimeMillis() + "." + getFileExtension(imageUri);
         //Uploading the image to the firebase storage:
-        UploadTask uploadTask = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri)).putFile(imageUri);
+        post_model.uploadImage(imageUri, image_name);
 
-        //If upload is successful, the link will be copied to the imageURL variable:
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-                Toast.makeText(PostActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-                        new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                imageURL = task.getResult().toString();
-                            }
-                        });
-            }
-
-        });
     }
 
     /**
@@ -279,5 +199,33 @@ public class PostActivity extends AppCompatActivity {
             imageUri = data.getData();
             binding.firebaseImage.setImageURI(imageUri);
         }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if(o instanceof String){
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            Toast.makeText(PostActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+            if(o.toString().equals("Your post has been published") || o.toString().equals("Your post has been updated") ){
+                Intent intent = new Intent(PostActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        }
+        else {
+            Post post = (Post) o;
+            binding.titleEditText.setHint(post.getTitle());
+            binding.addressEditText.setHint(post.getAddress());
+            binding.priceEditText.setHint(post.getPrice());
+            binding.descriptionEditText.setHint(post.getDescription());
+            Picasso.get()
+                    .load(post.getImageURL())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fit()
+                    .centerCrop()
+                    .into(binding.firebaseImage);
+        }
+
     }
 }
