@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         fire_user = auth.getCurrentUser();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.164:8000")
+                .baseUrl("http://10.0.0.23:8000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         fastApi = retrofit.create(FastApi.class);
@@ -84,34 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String confirm_password = confirm_password_etxt.getText().toString();
                 String fname = fname_etxt.getText().toString();
                 String lname = lname_etxt.getText().toString();
-
-                //Checking that the input is properly inputted according to the constraints:
-//                if (inputChecks(email, password, confirm_password, fname, lname)) {
-//                    //Showing the dialog window to the user:
-//                    prog_dialog.setMessage("Pleases Wait For Registration To Complete");
-//                    prog_dialog.setTitle("Registration");
-//                    prog_dialog.setCanceledOnTouchOutside(false);
-//                    prog_dialog.show();
-//
-//                    //creating a new user if the user is not found in the firebase authentication:
-//                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<AuthResult> task) {
-//                            //If user was created, initialize user object and insert to the "Users" collection in firestore.
-//                            if (task.isSuccessful()) {
-//                                User new_user = new User(fname, lname);
-//                                //inserting to firestore.
-//                                db.collection("users").document(email).set(new_user);
-//                                prog_dialog.dismiss();
-//                                SendUserToNextActivity();
-//                                Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                prog_dialog.dismiss();
-//                                Toast.makeText(RegisterActivity.this, "Failed to Register" + task.getException(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                }
                 createUser(email, password, confirm_password, fname, lname);
             }
         });
@@ -131,16 +103,20 @@ public class RegisterActivity extends AppCompatActivity {
         prog_dialog.setCanceledOnTouchOutside(false);
         prog_dialog.show();
 
-        CreateUser user = new CreateUser(email, password, confirm_password, first_name, first_name);
-        Call<CreateUser> call =fastApi.createUser(user);
-        call.enqueue(new Callback<CreateUser>() {
+        CreateUser user = new CreateUser(email, password, confirm_password, first_name, last_name);
+        Call<String> call =fastApi.createUser(user);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<CreateUser> call, Response<CreateUser> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Code:"  + response.code(), Toast.LENGTH_SHORT).show();
-                    fname_etxt.setText(response.errorBody().toString());
                     return;
                 }else{
+                    if(!response.body().equals("good")){
+                        prog_dialog.dismiss();
+                        Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -153,32 +129,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<CreateUser> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                fname_etxt.setText(t.getMessage());
             }
         });
-
-//        User user = new User("abc@gmail.com","111111","lll","054616161");
-//        Call<User> call =fastApi.createUser2(user);
-//        call.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                if (!response.isSuccessful()) {
-//                    Toast.makeText(RegisterActivity.this, "Code:"  + response.code(), Toast.LENGTH_SHORT).show();
-//                    fname_etxt.setText(response.errorBody().toString());
-//                    return;
-//                }else{
-//                    SendUserToNextActivity();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-////                fname_etxt.setText(t.getMessage());
-//            }
-//        });
     }
 
     public class CreateUser{
@@ -195,34 +149,6 @@ public class RegisterActivity extends AppCompatActivity {
             this.first_name = first_name;
             this.last_name = last_name;
         }
-    }
-
-    /**
-     * This function checks if the input is acceptable according to the constraints.
-     */
-    private boolean inputChecks(String email, String password, String confirm_password, String first_name, String last_name) {
-        String[] arr = {email, password, confirm_password, first_name, last_name};
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i].length() == 0) {
-                Toast.makeText(RegisterActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        if (!email.matches(email_pattern)) {
-            Toast.makeText(RegisterActivity.this, "Email format is not correct", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (password.length() < 6) {
-            Toast.makeText(RegisterActivity.this, "Password is too short", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (!password.equals(confirm_password)) {
-            Toast.makeText(RegisterActivity.this, "Password confirmation failed", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (!last_name.matches("[a-zA-Z]+") || !first_name.matches("[a-zA-Z]+")) {
-            Toast.makeText(RegisterActivity.this, "Full name contains illegal characters", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
     }
 
     /**
