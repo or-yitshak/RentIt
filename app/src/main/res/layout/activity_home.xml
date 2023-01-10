@@ -97,8 +97,8 @@
                     android:backgroundTint="@color/btncolor1"
                     android:padding="15dp"
                     android:text="Rent it"
-                    android:textSize="23dp"
                     android:textAllCaps="false"
+                    android:textSize="23dp"
                     app:cornerRadius="50dp" />
 
             </LinearLayout>
