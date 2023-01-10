@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RentMyStuff</string>
+    <string name="app_name">Rentit</string>
     <string name="new_post">New Post</string>
     <string-array name="categories">
         <item>Category</item>
