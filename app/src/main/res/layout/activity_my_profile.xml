@@ -4,82 +4,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgcolorstart"
     tools:context=".ProfileActivity"
     android:padding="15dp">
-
-    <TextView
-        android:id="@+id/Profile"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="Profile"
-        android:textSize="30dp" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_card_style"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <TextView
+                android:id="@+id/Profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:text="Profile"
+                android:textSize="25dp" />
 
-    <TextView
-        android:id="@+id/firstNameTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Profile"
-        android:layout_marginTop="25dp"
-        android:text="First name: "
-        android:textSize="20dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/lastNameTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/firstNameTxt"
-        android:layout_marginTop="25dp"
-        android:text="Last name: "
-        android:textSize="20dp" />
+                <TextView
+                    android:id="@+id/firstNameTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First Name: "
+                    android:textColor="#000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/emailTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lastNameTxt"
-        android:layout_marginTop="25dp"
-        android:text="Email: "
-        android:textSize="20dp" />
+                <TextView
+                    android:id="@+id/lastNameTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last Name: "
+                    android:textColor="#000"
+                    android:layout_marginTop="25dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    />
 
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@id/emailTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        />
+                <TextView
+                    android:id="@+id/emailTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email: "
+                    android:layout_below="@id/lastNameTxt"
+                    android:textColor="#000"
+                    android:layout_marginTop="25dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Posts"
-        android:layout_below="@id/imgView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:id="@+id/postsBtn"/>
+                <ImageView
+                    android:id="@+id/imgView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_below="@id/emailTxt"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        android:layout_below="@id/postsBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:visibility="invisible"
-        android:id="@+id/EditBtn"/>
+                <Button
+                    android:id="@+id/postsBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgView"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:backgroundTint="@color/btncolor1"
+                    android:text="Posts"
+                    app:cornerRadius="50dp" />
 
-    <Button
-        android:icon="@drawable/ic_baseline_message_24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Whatsapp"
-        android:layout_below="@id/postsBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:id="@+id/messageBtn"/>
+                <Button
+                    android:id="@+id/EditBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/postsBtn"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/btncolor1"
+                    android:text="Edit"
+                    app:cornerRadius="50dp" />
+
+                <ImageButton
+                    android:id="@+id/messageBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/postsBtn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="#fff"
+                    android:icon="@drawable/ic_baseline_message_24"
+                    android:text="Whatsapp"
+                    app:srcCompat="@drawable/whatsapp_button"
+                    android:scaleType="fitCenter" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 
 

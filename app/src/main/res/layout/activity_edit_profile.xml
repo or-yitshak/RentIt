@@ -177,10 +177,9 @@
 
                     <Button
                         android:id="@+id/selectImageBtn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="160dp"
                         android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="10dp"
                         android:backgroundTint="@color/btncolor1"
                         android:text="Select Image"
                         app:cornerRadius="50dp"
@@ -191,7 +190,7 @@
 
                     <Button
                         android:id="@+id/uploadImageBtn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="160dp"
                         android:layout_height="50dp"
                         android:layout_marginLeft="30dp"
                         android:layout_marginRight="10dp"
@@ -206,7 +205,7 @@
 
                 <Button
                     android:id="@+id/finishBtn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/constraintsLayout"
                     android:layout_centerHorizontal="true"
