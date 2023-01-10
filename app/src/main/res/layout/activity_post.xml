@@ -5,177 +5,131 @@
     android:id="@+id/imageView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/btncolor1"
+    android:padding="20dp"
     tools:context=".PostActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/newPostTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/new_post"
+            android:textSize="25dp" />
+
+        <Spinner
+            android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/login_card_style"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rent"
-                    android:textColor="#393637"
-                    android:textSize="34dp"
-                    android:textStyle="bold" />
+            android:layout_below="@id/newPostTextView"
+            android:layout_marginTop="15dp"
+            android:entries="@array/categories" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="it"
-                    android:textColor="#39a2d8"
-                    android:textSize="34dp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categorySpinner"
+            android:layout_marginTop="15dp"
+            android:hint="title" />
 
-            <TextView
-                android:id="@+id/newPostTextView"
+        <EditText
+            android:id="@+id/addressEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleEditText"
+            android:layout_marginTop="15dp"
+            android:hint="address" />
+
+        <Spinner
+            android:id="@+id/priceSpinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addressEditText"
+            android:layout_toRightOf="@id/priceEditText"
+            android:layout_marginTop="15dp"
+            android:layout_alignBottom="@id/priceEditText"
+            android:entries="@array/priceCategories" />
+
+        <EditText
+            android:id="@+id/priceEditText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addressEditText"
+            android:layout_marginTop="15dp"
+            android:inputType="numberDecimal"
+            android:hint="price" />
+
+
+        <EditText
+            android:id="@+id/descriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceEditText"
+            android:layout_marginTop="15dp"
+            android:hint="description"
+            android:lines="5" />
+
+
+        <TextView
+            android:id="@+id/imageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descriptionEditText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="Image:"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/firebaseImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_below="@id/imageTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/firebaseImage"
+            android:layout_marginTop="15dp">
+
+            <Button
+                android:id="@+id/selectImageBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text="@string/new_post"
-                android:textSize="25dp" />
-        </LinearLayout>
-    </LinearLayout>
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+                android:layout_height="50dp"
+                android:text="Select Image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/uploadImageBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/newPostTextView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:text="@string/new_post"-->
-<!--            android:textSize="25dp" />-->
+            <Button
+                android:id="@+id/uploadImageBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="Upload Image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/selectImageBtn"
+                app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <Spinner-->
-<!--            android:id="@+id/categorySpinner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/newPostTextView"-->
-<!--            android:layout_marginTop="15dp"-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--            android:entries="@array/categories" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/titleEditText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/categorySpinner"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:hint="title" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/addressEditText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/titleEditText"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:hint="address" />-->
-
-<!--        <Spinner-->
-<!--            android:id="@+id/priceSpinner"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/addressEditText"-->
-<!--            android:layout_toRightOf="@id/priceEditText"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:layout_alignBottom="@id/priceEditText"-->
-<!--            android:entries="@array/priceCategories" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/priceEditText"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/addressEditText"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:inputType="numberDecimal"-->
-<!--            android:hint="price" />-->
-
-
-<!--        <EditText-->
-<!--            android:id="@+id/descriptionEditText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/priceEditText"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:hint="description"-->
-<!--            android:lines="5" />-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/imageTextView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/descriptionEditText"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            android:text="Image:"-->
-<!--            android:textSize="25dp"-->
-<!--            android:textStyle="bold" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/firebaseImage"-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:layout_below="@id/imageTextView"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="30dp"-->
-<!--            tools:srcCompat="@tools:sample/avatars" />-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/constraintsLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/firebaseImage"-->
-<!--            android:layout_marginTop="15dp">-->
-
-<!--            <Button-->
-<!--                android:id="@+id/selectImageBtn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:text="Select Image"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/uploadImageBtn"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/uploadImageBtn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:text="Upload Image"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/selectImageBtn"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--        <Button-->
-<!--            android:id="@+id/postItBtn"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/constraintsLayout"-->
-<!--            android:text="POST IT" />-->
-<!--    </RelativeLayout>-->
+        <Button
+            android:id="@+id/postItBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/constraintsLayout"
+            android:text="POST IT" />
+    </RelativeLayout>
 
 </ScrollView>
