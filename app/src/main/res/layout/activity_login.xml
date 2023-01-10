@@ -149,16 +149,6 @@
                     android:textColorHint="#AB000000"
                     android:textSize="25dp" />
             </LinearLayout>
-            <!--            <TextView-->
-            <!--                android:id="@+id/forgotpassword"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:text="Forgot Password?"-->
-            <!--                android:textSize="20dp"-->
-            <!--                android:layout_marginVertical="10dp"-->
-            <!--                android:layout_gravity="right"-->
-            <!--                android:textStyle="bold"-->
-            <!--                android:textColor="#39a2d8"-->
-            <!--                android:layout_height="wrap_content"/>-->
 
             <Button
                 android:id="@+id/loginBtn"
