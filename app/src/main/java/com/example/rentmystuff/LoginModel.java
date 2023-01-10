@@ -7,22 +7,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Observable;
 
-public class LoginModel extends Observable {
-
-    private FirebaseAuth auth; // uses to register and login new users.
+public class LoginModel extends Model {
 
     public LoginModel() {
-        auth = FirebaseAuth.getInstance();
-    }
-
-    public FirebaseAuth getAuth() {
-        return auth;
-    }
-
-    public void setAuth(FirebaseAuth auth) {
-        this.auth = auth;
+        super();
     }
 
     public void signIn(String email, String password){

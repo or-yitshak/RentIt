@@ -19,22 +19,17 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Observable;
 
-public class PostModel extends Observable {
+public class PostModel extends Model {
 
     private StorageReference storageReference; //reference to the firebase storage that contain the images uploaded.
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
     private String imageURL;
 
     public PostModel() {
-        db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+        super();
         storageReference = FirebaseStorage.getInstance().getReference().child("images");
     }
 
-    public void signOut() {
-        auth.signOut();
-    }
+
 
     /**
      * This function allows the user to upload an image to the app.

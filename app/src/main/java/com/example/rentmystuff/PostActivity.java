@@ -44,12 +44,7 @@ public class PostActivity extends AppCompatActivity implements Observer {
     private ActivityPostBinding binding; //This allows us to reach all XML views, without re-initializing the variables.
 
     private Uri imageUri; //This contains the image content.
-//    private StorageReference storageReference; //reference to the firebase storage that contain the images uploaded.
-//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ProgressDialog progressDialog;
-//
-//    private String imageURL;
     private PostModel post_model;
     String post_id = "";
 
