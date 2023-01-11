@@ -17,40 +17,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RentMyStuff"
         tools:targetApi="31">
+
         <activity
-            android:name=".SignupActivity"
+            android:name=".login.LoginActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivityNew"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.login.LoginActivityNew"
-            android:exported="false"
-            android:label="@string/title_activity_login_new" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".EditPostActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ProfileListActivity"
+            android:name=".profileViewList.ProfileListActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity">
             <meta-data
@@ -58,31 +34,15 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".profile.EditProfileActivity"
             android:exported="false"
-            android:parentActivityName=".ProfileActivity">
+            android:parentActivityName=".profile.ProfileActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".PostPageActivity"
-            android:exported="false"
-            android:parentActivityName=".PostsListActivity">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".PostsListActivity"
+            android:name=".profile.ProfileActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity">
             <meta-data
@@ -90,14 +50,31 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".NotificationActivity"
-            android:exported="false">
+            android:name=".post.PostPageActivity"
+            android:exported="false"
+            android:parentActivityName=".postViewList.PostsListActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".PostActivity"
+            android:name=".postViewList.PostsListActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".notificationViewList.NotificationActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".post.PostActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity">
             <meta-data
@@ -112,9 +89,9 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".login.RegisterActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity">
+            android:parentActivityName=".login.LoginActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

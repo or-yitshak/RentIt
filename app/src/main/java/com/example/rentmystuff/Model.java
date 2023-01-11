@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import com.example.rentmystuff.interfaces.StorageCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -13,15 +14,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 public class Model extends Observable {
 
-    protected FirebaseFirestore db;
-    protected FirebaseAuth auth;
-    protected StorageReference storageReference; // reference to the storage in firebase.
-    protected String imageURL;
+    public FirebaseFirestore db;
+    public FirebaseAuth auth;
+    public StorageReference storageReference; // reference to the storage in firebase.
+    public String imageURL;
 
     public Model() {
         db = FirebaseFirestore.getInstance();

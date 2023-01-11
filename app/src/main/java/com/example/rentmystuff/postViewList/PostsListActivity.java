@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.postViewList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,11 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.login.LoginActivity;
+import com.example.rentmystuff.classes.Post;
+import com.example.rentmystuff.profile.ProfileActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

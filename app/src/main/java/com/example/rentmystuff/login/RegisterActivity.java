@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.rentmystuff.interfaces.FastApi;
+import com.example.rentmystuff.HomeActivity;
+import com.example.rentmystuff.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -18,10 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,16 +36,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * From this page the user can be sent back to the "LoginActivity" or the "HomeActivity" page.
  */
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements Observer {
 
     private EditText email_etxt, password_etxt, confirm_password_etxt, fname_etxt, lname_etxt;
     private Button login_btn, register_btn;
     private ProgressDialog prog_dialog;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    ;
-    private FirebaseUser fire_user;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private LoginModel login_model;
     private FastApi fastApi;
 
     /**
@@ -67,7 +67,9 @@ public class RegisterActivity extends AppCompatActivity {
         login_btn = findViewById(R.id.loginBtn);
         register_btn = findViewById(R.id.registerBtn);
         prog_dialog = new ProgressDialog(this);
-        fire_user = auth.getCurrentUser();
+
+        login_model = new LoginModel();
+        login_model.addObserver(this);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.0.23:8000")
@@ -117,14 +119,8 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            prog_dialog.dismiss();
-                            SendUserToNextActivity();
-                            Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+                    login_model.signIn(email, password);
                 }
             }
 
@@ -133,6 +129,15 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if(o.toString().equals("Successfully Login")){
+            prog_dialog.dismiss();
+            SendUserToNextActivity();
+            Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class CreateUser{

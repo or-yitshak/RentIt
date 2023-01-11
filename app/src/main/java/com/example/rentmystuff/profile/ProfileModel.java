@@ -1,9 +1,9 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.profile;
 
+import com.example.rentmystuff.Model;
+import com.example.rentmystuff.classes.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class ProfileModel extends Model {
 

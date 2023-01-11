@@ -1,10 +1,12 @@
 package com.example.rentmystuff;
 
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.classes.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class ViewHolderModel extends Model{
-    ViewHolderModel(){
+    public ViewHolderModel(){
         super();
     }
 

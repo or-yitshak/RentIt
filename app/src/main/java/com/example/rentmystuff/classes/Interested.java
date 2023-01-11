@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.classes;
 
 import java.util.Calendar;
 
@@ -13,7 +13,7 @@ public class Interested {
     private boolean approved = false;
     private String post_id = "";
     private String interested_id = "";
-
+    private String notification_id = "";
 
     /** Empty Constructor for the Interested class: */
     public Interested() {}
@@ -23,6 +23,14 @@ public class Interested {
         this.email = email;
         this.date = date;
         this.post_id = post_id;
+    }
+
+    public String getNotification_id() {
+        return notification_id;
+    }
+
+    public void setNotification_id(String notification_id) {
+        this.notification_id = notification_id;
     }
 
     /** Setters: */

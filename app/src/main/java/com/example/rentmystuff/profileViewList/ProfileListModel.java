@@ -1,20 +1,26 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.profileViewList;
 
 import android.content.Context;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.rentmystuff.classes.Post;
+import com.example.rentmystuff.interfaces.FirestoreCallback;
+import com.example.rentmystuff.Model;
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.classes.Notification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ProfileListModel extends Model{
+public class ProfileListModel extends Model {
 
     ProfileListModel(){
         super();
@@ -65,6 +71,26 @@ public class ProfileListModel extends Model{
                     public void onSuccess(Void unused) {
                         Toast.makeText(context, "the request has been removed!", Toast.LENGTH_SHORT).show();
 
+                    }
+                });
+
+
+
+        db.collection("posts")
+                .document(curr_inter.getPost_id())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Post post = documentSnapshot.toObject(Post.class);
+                        db.collection("users").
+                                document(post.getPublisher_email())
+                                .collection("notifications")
+                                .document(curr_inter.getNotification_id()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        System.out.println("Deleted Notification for user");
+                                    }
+                                });
                     }
                 });
     }

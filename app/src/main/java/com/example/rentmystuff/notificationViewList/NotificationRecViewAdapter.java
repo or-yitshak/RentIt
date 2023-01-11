@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.notificationViewList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,22 +8,25 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.classes.Notification;
+import com.example.rentmystuff.classes.User;
 import com.example.rentmystuff.databinding.ActivityProfileListBinding;
+import com.example.rentmystuff.classes.Post;
+import com.example.rentmystuff.post.PostPageActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 /**

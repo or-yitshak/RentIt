@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.rentmystuff.HomeActivity;
+import com.example.rentmystuff.R;
 
 import java.util.Observable;
 import java.util.Observer;

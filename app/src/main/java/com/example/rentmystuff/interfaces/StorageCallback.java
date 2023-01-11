@@ -1,6 +1,4 @@
-package com.example.rentmystuff;
-
-import java.util.ArrayList;
+package com.example.rentmystuff.interfaces;
 
 public interface StorageCallback {
     void onCallback(String imageURL);

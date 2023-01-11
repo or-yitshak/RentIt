@@ -1,4 +1,6 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.interfaces;
+
+import com.example.rentmystuff.login.RegisterActivity;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

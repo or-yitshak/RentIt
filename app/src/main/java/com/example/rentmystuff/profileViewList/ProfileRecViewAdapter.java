@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.profileViewList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.ViewHolderModel;
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.classes.User;
 import com.example.rentmystuff.databinding.ActivityProfileListBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.rentmystuff.profile.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     @Override
     public ProfileRecViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(this.context).inflate(R.layout.profile_list_item, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v).linkAdapter(this);
     }
 
     /**
@@ -106,15 +106,12 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         holder.close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.check_btn.setVisibility(view.GONE);
-                holder.close_btn.setVisibility(view.GONE);
-                interested_list.remove(curr_inter);
-                notifyDataSetChanged();
+//                interested_list.remove(curr_inter);
                 profile_list_model.deleteInterested(curr_inter,context);
-
-                holder.check_btn.setVisibility(view.GONE);
-                holder.close_btn.setVisibility(view.GONE);
                 profile_list_model.addNotification(curr_inter, false);
+                holder.adapter.interested_list.remove(holder.getAdapterPosition());
+                holder.adapter.notifyItemRemoved(holder.getAdapterPosition());
+//                notifyDataSetChanged();
             }
         });
     }
@@ -140,6 +137,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         private ImageButton check_btn;
         private ImageButton close_btn;
         private ViewHolderModel view_holder_model;
+        private ProfileRecViewAdapter adapter;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,6 +148,12 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             parent = itemView.findViewById(R.id.parent);
             check_btn = itemView.findViewById(R.id.checkBtn);
             close_btn = itemView.findViewById(R.id.closeBtn);
+            close_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
             view_holder_model = new ViewHolderModel();
             view_holder_model.addObserver(this);
         }
@@ -171,8 +175,11 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
                 String str = (String) o;
 
             }
+        }
 
-
+        public ViewHolder linkAdapter(ProfileRecViewAdapter adapter){
+            this.adapter = adapter;
+            return this;
         }
     }
 }

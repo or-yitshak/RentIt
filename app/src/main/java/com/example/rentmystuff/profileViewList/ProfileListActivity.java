@@ -1,8 +1,7 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.profileViewList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,13 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.rentmystuff.interfaces.FirestoreCallback;
+import com.example.rentmystuff.HomeActivity;
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.Observable;

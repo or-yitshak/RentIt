@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.classes;
 
 import java.util.Calendar;
 

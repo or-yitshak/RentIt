@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.notificationViewList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.rentmystuff.HomeActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.Notification;
+import com.example.rentmystuff.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

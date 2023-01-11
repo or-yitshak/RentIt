@@ -1,27 +1,24 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.profile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.rentmystuff.HomeActivity;
 import com.example.rentmystuff.databinding.ActivityMyProfileBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.rentmystuff.login.LoginActivity;
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.postViewList.PostsListActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.Observable;

@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.post;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +14,17 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.example.rentmystuff.classes.Interested;
+import com.example.rentmystuff.classes.Post;
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
+import com.example.rentmystuff.login.LoginActivity;
+import com.example.rentmystuff.classes.Notification;
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.postViewList.PostsListActivity;
+import com.example.rentmystuff.profile.ProfileActivity;
+import com.example.rentmystuff.profileViewList.ProfileListActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,6 +48,8 @@ public class PostPageActivity extends AppCompatActivity {
     private ActivityPostPageBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+
+//    private
 
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
@@ -182,6 +194,12 @@ public class PostPageActivity extends AppCompatActivity {
                                                         .collection("notifications")
                                                         .document(documentReference.getId())
                                                         .update("notification_id",documentReference.getId());
+
+                                                db.collection("posts")
+                                                        .document(post_id)
+                                                        .collection("interested")
+                                                        .document(in.getInterested_id())
+                                                        .update("notification_id", documentReference.getId());
                                             }
                                         });
                             }

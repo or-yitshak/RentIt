@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.classes;
 
 /**
  * This is the Post class.

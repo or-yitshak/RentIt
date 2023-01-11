@@ -1,11 +1,6 @@
-package com.example.rentmystuff;
-
-import static androidx.core.content.ContextCompat.startActivity;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.rentmystuff.postViewList;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -21,12 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.classes.Post;
+import com.example.rentmystuff.classes.User;
+import com.example.rentmystuff.post.PostPageActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapter.ViewHolder> implements Filterable {

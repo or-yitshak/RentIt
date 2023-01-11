@@ -1,4 +1,4 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.post;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,17 +17,14 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import com.example.rentmystuff.HomeActivity;
+import com.example.rentmystuff.classes.Post;
 import com.example.rentmystuff.databinding.ActivityPostBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.example.rentmystuff.login.LoginActivity;
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.profile.ProfileActivity;
+import com.example.rentmystuff.R;
+import com.example.rentmystuff.interfaces.StorageCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Observable;
@@ -45,7 +42,6 @@ public class PostActivity extends AppCompatActivity implements Observer {
 
     private Uri imageUri; //This contains the image content.
     private ProgressDialog progressDialog;
-//
     private PostModel post_model;
     String post_id = "";
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgcolorstart"
     android:padding="15dp"
-    tools:context=".PostPageActivity">
+    tools:context=".post.PostPageActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

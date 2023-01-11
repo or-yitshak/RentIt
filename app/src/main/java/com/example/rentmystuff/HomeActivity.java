@@ -12,11 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.rentmystuff.classes.User;
+import com.example.rentmystuff.login.LoginActivity;
+import com.example.rentmystuff.notificationViewList.NotificationActivity;
+import com.example.rentmystuff.post.PostActivity;
+import com.example.rentmystuff.postViewList.PostsListActivity;
+import com.example.rentmystuff.profile.ProfileActivity;
+import com.example.rentmystuff.profile.ProfileModel;
 
 import java.util.Observable;
 import java.util.Observer;

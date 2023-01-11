@@ -1,4 +1,6 @@
-package com.example.rentmystuff;
+package com.example.rentmystuff.interfaces;
+
+import com.example.rentmystuff.classes.Interested;
 
 import java.util.ArrayList;
 

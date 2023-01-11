@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgcolorstart"
     android:padding="10dp"
-    tools:context=".EditProfileActivity">
+    tools:context=".profile.EditProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
