@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.example.rentmystuff.DeleteDialog;
 import com.example.rentmystuff.classes.Interested;
 import com.example.rentmystuff.classes.Post;
 import com.example.rentmystuff.databinding.ActivityPostPageBinding;
@@ -42,7 +43,7 @@ import java.util.Observer;
  * From this page the user can reach the "PostListActivity" or "InterestedActivity" pages.
  */
 
-public class PostPageActivity extends AppCompatActivity implements Observer {
+public class PostPageActivity extends AppCompatActivity implements Observer, DeleteDialog.DeleteDialogListener {
 
     private String post_id; //id of the post.
     private Post curr_post; // the current post object.
@@ -158,6 +159,16 @@ public class PostPageActivity extends AppCompatActivity implements Observer {
                 startActivity(intent);
             }
         });
+
+        binding.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DeleteDialog delete_dialog = new DeleteDialog(post_model, post_id);
+                delete_dialog.show(getSupportFragmentManager(),"Delete Dialog");
+//                post_model.deletePost(post_id);
+            }
+        });
     }
 
     @Override
@@ -172,6 +183,7 @@ public class PostPageActivity extends AppCompatActivity implements Observer {
                 binding.datesBtn.setVisibility(View.GONE);
                 binding.interestedBtn.setVisibility(View.VISIBLE);
                 binding.EditBtn.setVisibility(View.VISIBLE);
+                binding.deleteBtn.setVisibility(View.VISIBLE);
             }
 
             binding.titleTxt.setText(curr_post.getTitle());
@@ -230,5 +242,10 @@ public class PostPageActivity extends AppCompatActivity implements Observer {
      */
     public void openDatePicker() {
         date_picker.show();
+    }
+
+    @Override
+    public void applyTexts(String username, String password) {
+
     }
 }

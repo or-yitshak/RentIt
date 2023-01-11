@@ -148,6 +148,20 @@
                 android:text="Edit"
                 android:visibility="gone"
                 app:cornerRadius="50dp" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/EditBtn"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:backgroundTint="#FF0000"
+                android:text="Delete"
+                android:visibility="gone"
+                app:cornerRadius="50dp" />
+
         </LinearLayout>
     </LinearLayout>
 

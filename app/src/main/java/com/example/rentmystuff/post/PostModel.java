@@ -3,14 +3,20 @@ package com.example.rentmystuff.post;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.rentmystuff.Model;
 import com.example.rentmystuff.classes.Interested;
 import com.example.rentmystuff.classes.Notification;
 import com.example.rentmystuff.classes.Post;
 import com.example.rentmystuff.classes.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 public class PostModel extends Model {
@@ -154,5 +160,56 @@ public class PostModel extends Model {
                         notifyObservers("Your request has been submitted");
                     }
                 });
+    }
+
+    public void deletePost(String post_id) {
+
+        db.collection("posts").document(post_id).collection("interested").
+                get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                //If task is successful, insert interested user to the list:
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Interested curr_inter = doc.toObject(Interested.class);
+                        if(curr_inter.getNotification_id() != null && ! curr_inter.getNotification_id().equals("")){
+                            db.collection("users").document(curr_inter.getEmail())
+                                    .collection("notifications")
+                                    .document(curr_inter.getNotification_id()).delete();
+                        }
+                        db.collection("posts").document(post_id).
+                                collection("interested").document(doc.getId()).delete();
+                    }
+                }
+            }
+        });
+
+        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for(QueryDocumentSnapshot doc : task.getResult()){
+//                    User user = doc.toObject(User.class);
+                    String email = doc.getId();
+                    db.collection("users").document(doc.getId()).collection("notifications")
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    for(QueryDocumentSnapshot doc : task.getResult()){
+                                        Notification notification = doc.toObject(Notification.class);
+                                        if(notification.getPost_id().equals(post_id)){
+                                            db.collection("users").document(email)
+                                                    .collection("notifications")
+                                                    .document(doc.getId()).delete();
+                                        }
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
+        db.collection("posts")
+                .document(post_id).delete();
+
     }
 }
