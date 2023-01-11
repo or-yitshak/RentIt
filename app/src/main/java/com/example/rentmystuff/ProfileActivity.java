@@ -23,20 +23,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * This is the ProfileActivity class.
  * Once user is logged in, this page can be reached from everywhere through the menu-bar.
  * From this page the user can reach "PostsListActivity" and "EditProfileActivity" pages.
  */
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements Observer {
 
     private ActivityMyProfileBinding binding;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ProfileModel profile_model;
     private String email = "";
     private String phone_number = "";
-    private static final int REQUEST_SMS = 1;
 
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
@@ -56,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(ProfileActivity.this, LoginActivity.class);
-                auth.signOut();
+                profile_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -78,6 +79,9 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("ProfileActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        profile_model = new ProfileModel();
+        profile_model.addObserver(this);
+
         binding = ActivityMyProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -85,11 +89,11 @@ public class ProfileActivity extends AppCompatActivity {
         if (extras != null) {
             email = extras.getString("email");
         } else {
-            email = auth.getCurrentUser().getEmail();
+            email = profile_model.getEmail();
         }
 
         //Check if the user is on his own page. If so, show the edit post button.
-        if (auth.getCurrentUser().getEmail().equals(email)) {
+        if (profile_model.getEmail().equals(email)) {
             binding.EditBtn.setVisibility(View.VISIBLE);
             binding.messageBtn.setVisibility(View.INVISIBLE);
         }
@@ -114,68 +118,53 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         //extract from the firestore database the user information:
-        db.collection("users").document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                binding.firstNameTxt.setText("First Name: " + user.getFirst_name());
-                binding.lastNameTxt.setText("Last Name: " + user.getLast_name());
-                binding.emailTxt.setText("Email: " + email);
-                phone_number = user.getPhone_number();
-                //Using Picasso library to download an image using URL:
-                Picasso.get()
-                        .load(user.getImage_URL())
-                        .placeholder(R.mipmap.ic_launcher)
-                        .fit()
-                        .centerCrop()
-                        .into(binding.imgView);
-            }
-        });
+        profile_model.getUserInfo(email);
 
         binding.messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String phoneNumber = "972" + phone_number; // Replace with phone number of the person you want to send a message to
-                String message = ""; // Replace with the message you want to send
+                if(!isInstalled("com.whatsapp")){
+                    Toast.makeText(ProfileActivity.this, "app not installed", Toast.LENGTH_SHORT).show();
+                } else{
+                    String phoneNumber = "972" + phone_number; // Replace with phone number of the person you want to send a message to
+                    String message = ""; // Replace with the message you want to send
 
-                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + message);
-                Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
-                sendIntent.setPackage("com.whatsapp");
-                startActivity(sendIntent);
+                    Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + message);
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
+                }
             }
         });
     }
 
-//    private boolean isInstalled(String url) {
-//        PackageManager package_manager = getPackageManager();
-//        boolean app_installed;
-//        try{
-//            package_manager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
-//            app_installed = true;
-//        } catch (PackageManager.NameNotFoundException e) {
-////            e.printStackTrace();
-//            app_installed = false;
-//        }
-//        return app_installed;
-//    }
-    private void requestSmsPermission() {
-        String permission = Manifest.permission.SEND_SMS;
-        int grant = ContextCompat.checkSelfPermission(this, permission);
-        if (grant != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = new String[]{permission};
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_SMS);
+    private boolean isInstalled(String url) {
+        PackageManager package_manager = getPackageManager();
+        boolean app_installed;
+        try{
+            package_manager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+            app_installed = false;
         }
+        return app_installed;
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_SMS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-            } else {
-                // Permission denied
-            }
-        }
+    public void update(Observable observable, Object o) {
+        User user = (User) o;
+        binding.firstNameTxt.setText("First Name: " + user.getFirst_name());
+        binding.lastNameTxt.setText("Last Name: " + user.getLast_name());
+        binding.emailTxt.setText("Email: " + email);
+        phone_number = user.getPhone_number();
+        //Using Picasso library to download an image using URL:
+        Picasso.get()
+                .load(user.getImage_URL())
+                .placeholder(R.mipmap.ic_launcher)
+                .fit()
+                .centerCrop()
+                .into(binding.imgView);
     }
 }

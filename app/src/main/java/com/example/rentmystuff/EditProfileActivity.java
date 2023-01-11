@@ -28,19 +28,20 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * This is the EditProfileActivity class.
  * This can be reached and sends only to the "ProfileActivity" page.
  */
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements Observer {
 
     private ActivityEditProfileBinding binding;
-
+    private ProfileModel profile_model;
     private Uri imageUri; // the URI of the profile image.
-    private StorageReference storageReference; // reference to the storage in firebase.
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+//    private StorageReference storageReference; // reference to the storage in firebase.
     private ProgressDialog progressDialog;
 
     private String imageURL; // URL of the profile image.
@@ -67,7 +68,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 return true;
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(EditProfileActivity.this, LoginActivity.class);
-                auth.signOut();
+                profile_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -84,8 +85,8 @@ public class EditProfileActivity extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //setting the storage reference to the firebase storage images:
-        storageReference = FirebaseStorage.getInstance().getReference("images");
+        profile_model = new ProfileModel();
+        profile_model.addObserver(this);
 
         //allows user to choose image form the gallery:
         binding.selectImageBtn.setOnClickListener(new View.OnClickListener() {
@@ -103,24 +104,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        String email = auth.getCurrentUser().getEmail();
-        db.collection("users").document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                binding.firstNameETxt.setHint(user.getFirst_name());
-                binding.lastNameETxt.setHint(user.getLast_name());
-                binding.phoneNumber.setHint(user.getPhone_number());
+        profile_model.getUserInfo(profile_model.getEmail());
 
-                //Using Picasso library to download an image using URL:
-                Picasso.get()
-                        .load(user.getImage_URL())
-                        .placeholder(R.mipmap.ic_launcher)
-                        .fit()
-                        .centerCrop()
-                        .into(binding.imgView);
-            }
-        });
         //once user clicked, check all input is according to the constraints. If so, upload to the firestore:
         binding.finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,19 +113,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 String first_name = binding.firstNameETxt.getText().toString();
                 String last_name = binding.lastNameETxt.getText().toString();
                 String phone_number = binding.phoneNumber.getText().toString();
-                String email = auth.getCurrentUser().getEmail();
-                if (imageURL != null) {
-                    db.collection("users").document(email).update("image_URL", imageURL);
-                }
-                if (!first_name.equals("") && checkInput(first_name)) {
-                    db.collection("users").document(email).update("first_name", first_name);
-                }
-                if (!last_name.equals("") && checkInput(last_name)) {
-                    db.collection("users").document(email).update("last_name", last_name);
-                }
-                if(!phone_number.equals("") && phone_number.length() <= 15){
-                    db.collection("users").document(email).update("phone_number", phone_number);
-                }
+                profile_model.updateUserInfo(first_name, last_name, phone_number);
+
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }
@@ -148,15 +122,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * This function checks the user input according to the constraints.
-     */
-    private boolean checkInput(String st) {
-        if (!st.matches("[a-zA-Z]+")) {
-            return false;
-        }
-        return true;
-    }
+
 
     /**
      * This function return a string of the extension of the file (image file).
@@ -186,30 +152,9 @@ public class EditProfileActivity extends AppCompatActivity {
         progressDialog.show();
 
         //Getting the firebase storage:
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("images");
+        String image_name = System.currentTimeMillis() + "." + getFileExtension(imageUri);
+        profile_model.uploadImage(imageUri, image_name);
 
-        //Uploading the image to the firebase storage:
-        UploadTask uploadTask = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri)).putFile(imageUri);
-
-        //If upload is successful, the link will be copied to the imageURL variable:
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-                Toast.makeText(EditProfileActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-                        new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                imageURL = task.getResult().toString();
-                            }
-                        });
-            }
-
-        });
     }
 
     /**
@@ -235,6 +180,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
             imageUri = data.getData();
             binding.imgView.setImageURI(imageUri);
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if(o instanceof User){
+            User user = (User) o;
+            binding.firstNameETxt.setHint(user.getFirst_name());
+            binding.lastNameETxt.setHint(user.getLast_name());
+            binding.phoneNumber.setHint(user.getPhone_number());
+
+            //Using Picasso library to download an image using URL:
+            Picasso.get()
+                    .load(user.getImage_URL())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fit()
+                    .centerCrop()
+                    .into(binding.imgView);
+        } else if(o instanceof String){
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            Toast.makeText(EditProfileActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 }

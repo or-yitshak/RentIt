@@ -45,6 +45,7 @@ public class PostActivity extends AppCompatActivity implements Observer {
 
     private Uri imageUri; //This contains the image content.
     private ProgressDialog progressDialog;
+//
     private PostModel post_model;
     String post_id = "";
 
