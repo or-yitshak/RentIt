@@ -125,7 +125,7 @@ public class PostActivity extends AppCompatActivity implements Observer {
                 String category = binding.categorySpinner.getSelectedItem().toString();
                 String title = binding.titleEditText.getText().toString();
                 String address = binding.addressEditText.getText().toString();
-                String price = binding.priceEditText.getText().toString();
+                int price = Integer.parseInt(binding.priceEditText.getText().toString());
                 String description = binding.descriptionEditText.getText().toString();
                 String priceCategory = binding.priceSpinner.getSelectedItem().toString();
                 //checking if the previous activity sent extra data:

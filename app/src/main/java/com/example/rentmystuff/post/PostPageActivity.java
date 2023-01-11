@@ -33,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This is the PostPageActivity class.
@@ -40,7 +42,7 @@ import java.util.Calendar;
  * From this page the user can reach the "PostListActivity" or "InterestedActivity" pages.
  */
 
-public class PostPageActivity extends AppCompatActivity {
+public class PostPageActivity extends AppCompatActivity implements Observer {
 
     private String post_id; //id of the post.
     private Post curr_post; // the current post object.
@@ -48,6 +50,7 @@ public class PostPageActivity extends AppCompatActivity {
     private ActivityPostPageBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private PostModel post_model;
 
 //    private
 
@@ -91,6 +94,9 @@ public class PostPageActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("PostPageActivity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        post_model = new PostModel();
+        post_model.addObserver(this);
+
         binding = ActivityPostPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -104,46 +110,7 @@ public class PostPageActivity extends AppCompatActivity {
         }
 
         //extracting the wanted post from the database:
-        db.collection("posts").document(post_id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            //If post found in database, create a Post object and extract its information into the page:
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                curr_post = new Post();
-                curr_post = documentSnapshot.toObject(Post.class);
-                curr_post.setPost_id(post_id);
-
-                binding.titleTxt.setText(curr_post.getTitle());
-                binding.categoryTxt.setText("Category: " + curr_post.getCategory());
-//                binding.publisherTxt.setText("Publisher Name: " + curr_post.getPublisher_email());
-                binding.addressTxt.setText("Address: " + curr_post.getAddress());
-                binding.priceTxt.setText("Price: " + curr_post.getPrice()+ curr_post.getPrice_category());
-                binding.descriptionContentTxt.setText(curr_post.getDescription());
-
-                //Using Picasso to download an image using a URL:
-                Picasso.get()
-                        .load(curr_post.getImageURL())
-                        .fit()
-                        .centerCrop()
-                        .into(binding.imgView);
-
-                //extracting the users information:
-                db.collection("users").document(curr_post.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User user = documentSnapshot.toObject(User.class);
-                        binding.publisherTxt.setText("Publisher Name: " + user.getFirst_name() + " " + user.getLast_name());
-                    }
-                });
-
-                //Checking if the post is the current users post. If so show different set of buttons:
-                if (auth.getCurrentUser().getEmail().equals(curr_post.getPublisher_email())) {
-                    binding.rentBtn.setVisibility(View.GONE);
-                    binding.datesBtn.setVisibility(View.GONE);
-                    binding.interestedBtn.setVisibility(View.VISIBLE);
-                    binding.EditBtn.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        post_model.getPostInfo(post_id);
 
         //If the date button was clicked, open date picker:
         binding.datesBtn.setOnClickListener(new View.OnClickListener() {
@@ -158,54 +125,16 @@ public class PostPageActivity extends AppCompatActivity {
         binding.rentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (binding.datesBtn.getText().toString().equals("choose dates")){
                     Toast.makeText(PostPageActivity.this, "Please select date for rent", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Interested in = new Interested(auth.getCurrentUser().getEmail(), binding.datesBtn.getText().toString(), post_id);
-                if(in.isDatePassed()){
-                    Toast.makeText(PostPageActivity.this, "Please select legitimate date for rent", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                post_model.addInterested(in, curr_post);
 
-                db.collection("posts")
-                        .document(post_id)
-                        .collection("interested").add(in).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                db.collection("posts")
-                                        .document(post_id)
-                                        .collection("interested")
-                                        .document(documentReference.getId())
-                                        .update("interested_id",documentReference.getId());
-                                in.setInterested_id(documentReference.getId());
-                                Notification notification = new Notification(post_id, false);
-                                notification.setDate(binding.datesBtn.getText().toString());
-                                notification.setInterested_id(in.getInterested_id());
 
-                                db.collection("users")
-                                        .document(curr_post.getPublisher_email())
-                                        .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                db.collection("users")
-                                                        .document(curr_post.getPublisher_email())
-                                                        .collection("notifications")
-                                                        .document(documentReference.getId())
-                                                        .update("notification_id",documentReference.getId());
-
-                                                db.collection("posts")
-                                                        .document(post_id)
-                                                        .collection("interested")
-                                                        .document(in.getInterested_id())
-                                                        .update("notification_id", documentReference.getId());
-                                            }
-                                        });
-                            }
-                        });
-
-                Toast.makeText(PostPageActivity.this, "Your request has been submitted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PostPageActivity.this, PostsListActivity.class);
                 startActivity(intent);
             }
@@ -229,6 +158,43 @@ public class PostPageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+
+        if(o instanceof Post){
+
+            curr_post = (Post) o;
+            if (post_model.getAuthEmail().equals(curr_post.getPublisher_email())) {
+                binding.rentBtn.setVisibility(View.GONE);
+                binding.datesBtn.setVisibility(View.GONE);
+                binding.interestedBtn.setVisibility(View.VISIBLE);
+                binding.EditBtn.setVisibility(View.VISIBLE);
+            }
+
+            binding.titleTxt.setText(curr_post.getTitle());
+            binding.categoryTxt.setText("Category: " + curr_post.getCategory());
+            binding.addressTxt.setText("Address: " + curr_post.getAddress());
+            binding.priceTxt.setText("Price: " + curr_post.getPrice()+ curr_post.getPrice_category());
+            binding.descriptionContentTxt.setText(curr_post.getDescription());
+
+            //Using Picasso to download an image using a URL:
+            Picasso.get()
+                    .load(curr_post.getImageURL())
+                    .fit()
+                    .centerCrop()
+                    .into(binding.imgView);
+        }
+
+        else if(o instanceof User){
+            User user = (User) o;
+            binding.publisherTxt.setText("Publisher Name: " + user.getFirst_name() + " " + user.getLast_name());
+
+        }
+        else if( o instanceof String){
+            Toast.makeText(PostPageActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

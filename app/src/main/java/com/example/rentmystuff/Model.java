@@ -64,4 +64,8 @@ public class Model extends Observable {
         });
     }
 
+    public String getAuthEmail(){
+        return auth.getCurrentUser().getEmail();
+    }
+
 }
