@@ -153,7 +153,12 @@ public class EditProfileActivity extends AppCompatActivity implements Observer {
 
         //Getting the firebase storage:
         String image_name = System.currentTimeMillis() + "." + getFileExtension(imageUri);
-        profile_model.uploadImage(imageUri, image_name);
+        profile_model.uploadImage(imageUri, image_name, new StorageCallback() {
+            @Override
+            public void onCallback(String imageURL) {
+                profile_model.imageURL =imageURL;
+            }
+        });
 
     }
 

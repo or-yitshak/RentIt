@@ -103,6 +103,8 @@ public class PostActivity extends AppCompatActivity implements Observer {
             binding.newPostTextView.setText("Edit Post");
             post_model.setHint(post_id);
         }
+        progressDialog = new ProgressDialog(this);
+
         //getting the storage reference and creating an "image" directory inside.
 
         binding.selectImageBtn.setOnClickListener(new View.OnClickListener() {
@@ -164,12 +166,16 @@ public class PostActivity extends AppCompatActivity implements Observer {
             return;
         }
         //Show progress window:
-        progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Uploading File....");
         progressDialog.show();
         String image_name = System.currentTimeMillis() + "." + getFileExtension(imageUri);
         //Uploading the image to the firebase storage:
-        post_model.uploadImage(imageUri, image_name);
+        post_model.uploadImage(imageUri, image_name, new StorageCallback() {
+            @Override
+            public void onCallback(String imageURL) {
+                post_model.imageURL = imageURL;
+            }
+        });
 
     }
 
@@ -200,10 +206,11 @@ public class PostActivity extends AppCompatActivity implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         if(o instanceof String){
+            String str = (String) o;
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(PostActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(PostActivity.this, str, Toast.LENGTH_SHORT).show();
             if(o.toString().equals("Your post has been published") || o.toString().equals("Your post has been updated") ){
                 Intent intent = new Intent(PostActivity.this, HomeActivity.class);
                 startActivity(intent);

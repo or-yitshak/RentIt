@@ -21,46 +21,10 @@ import java.util.Observable;
 
 public class PostModel extends Model {
 
-    private StorageReference storageReference; //reference to the firebase storage that contain the images uploaded.
-    private String imageURL;
-
     public PostModel() {
         super();
         storageReference = FirebaseStorage.getInstance().getReference().child("images");
     }
-
-
-
-//    /**
-//     * This function allows the user to upload an image to the app.
-//     * It checks the imageUri and uploads it to the firebase storage.
-//     * If the check fails, a message is displayed to the user asking him to select image.
-//     * Otherwise the function uploads the image to the firebase storage and saves the link as a variable.
-//     * @param imageUri
-//     * @param image_name
-//     */
-//    public void uploadImage(Uri imageUri, String image_name) {
-//
-//        //Uploading the image to the firebase storage:
-//        UploadTask uploadTask = storageReference.child(image_name).putFile(imageUri);
-//
-//        //If upload is successful, the link will be copied to the imageURL variable:
-//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                setChanged();
-//                notifyObservers("Image Uploaded Successfully");
-//                taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-//                        new OnCompleteListener<Uri>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Uri> task) {
-//                                imageURL = task.getResult().toString();
-//                            }
-//                        });
-//            }
-//        });
-//    }
-
 
     public void postIt(String category, String title, String description, String address, String price, String priceCategory) {
         setChanged();

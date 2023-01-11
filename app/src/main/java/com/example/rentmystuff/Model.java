@@ -13,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 public class Model extends Observable {
@@ -26,7 +27,6 @@ public class Model extends Observable {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference().child("images");
-
     }
 
     public void signOut() {
@@ -41,7 +41,7 @@ public class Model extends Observable {
      * @param imageUri
      * @param image_name
      */
-    public void uploadImage(Uri imageUri, String image_name) {
+    public void uploadImage(Uri imageUri, String image_name, StorageCallback storage_callback) {
 
         //Uploading the image to the firebase storage:
         UploadTask uploadTask = storageReference.child(image_name).putFile(imageUri);
@@ -57,6 +57,7 @@ public class Model extends Observable {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
                                 imageURL = task.getResult().toString();
+                                storage_callback.onCallback(imageURL);
                             }
                         });
             }
