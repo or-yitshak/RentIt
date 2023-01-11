@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.rentmystuff.databinding.ActivityMyProfileBinding;
@@ -124,9 +125,7 @@ public class ProfileActivity extends AppCompatActivity implements Observer {
             @Override
             public void onClick(View view) {
 
-                if(!isInstalled("com.whatsapp")){
-                    Toast.makeText(ProfileActivity.this, "app not installed", Toast.LENGTH_SHORT).show();
-                } else{
+                try{
                     String phoneNumber = "972" + phone_number; // Replace with phone number of the person you want to send a message to
                     String message = ""; // Replace with the message you want to send
 
@@ -134,23 +133,13 @@ public class ProfileActivity extends AppCompatActivity implements Observer {
                     Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
                     sendIntent.setPackage("com.whatsapp");
                     startActivity(sendIntent);
+                } catch (Exception e) {
+                    Toast.makeText(ProfileActivity.this, "app not installed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private boolean isInstalled(String url) {
-        PackageManager package_manager = getPackageManager();
-        boolean app_installed;
-        try{
-            package_manager.getPackageInfo(url, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-            app_installed = false;
-        }
-        return app_installed;
-    }
 
     @Override
     public void update(Observable observable, Object o) {
