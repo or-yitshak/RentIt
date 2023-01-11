@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rentmystuff.databinding.ActivityPostPageBinding;
 import com.example.rentmystuff.databinding.ActivityProfileListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,7 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This is the ProfileRecViewAdapter class.
@@ -36,15 +35,22 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     private ArrayList<Interested> interested_list; // An ArrayList of interested users.
     private String parent; //string representing from which class we arrived to profileListView.
     private ActivityProfileListBinding binding;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private ProfileListModel profile_list_model;
 
     /**
      * Constructor for the ProfileRecViewAdapter class.
      */
-    public ProfileRecViewAdapter(Context context, ArrayList<Interested> users, String parent) {
+    public ProfileRecViewAdapter(Context context, ArrayList<Interested> users, String parent, ProfileListModel profile_list_model) {
         this.context = context;
         this.interested_list = users;
+        this.profile_list_model = profile_list_model;
         this.parent = parent;
+    }
+
+    public void setInterested_list(ArrayList<Interested> interested_list) {
+        this.interested_list = interested_list;
+        notifyDataSetChanged();
     }
 
     /**
@@ -65,20 +71,8 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     @Override
     public void onBindViewHolder(@NonNull ProfileRecViewAdapter.ViewHolder holder, int position) {
         Interested curr_inter = this.interested_list.get(position);
-        db.collection("users").document(curr_inter.getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User curr_user = documentSnapshot.toObject(User.class);
-                holder.name_txt.setText("Full Name: " + curr_user.getFirst_name() + " " + curr_user.getLast_name());
-                //Using Picasso library to download an image using URL:
-                Picasso.get()
-                        .load(curr_user.getImage_URL())
-                        .placeholder(R.mipmap.ic_launcher)
-                        .fit()
-                        .centerCrop()
-                        .into(holder.profile_image);
-            }
-        });
+        holder.view_holder_model.setOnBindViewHolder(curr_inter);
+
         holder.email_txt.setText("Email: " + curr_inter.getEmail());
         holder.date_txt.setText("Date: " + curr_inter.getDate());
 
@@ -96,27 +90,16 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             holder.check_btn.setVisibility(View.GONE);
             holder.close_btn.setVisibility(View.GONE);
         }
-        final String[] title = new String[2];
-        db.collection("posts").document(curr_inter.getPost_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Post pst = documentSnapshot.toObject(Post.class);
-                title[0] = pst.getTitle();
-//                        title[1] = pst.getPublisher_email();
-            }
-        });
 
         holder.check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.collection("posts").document(curr_inter.getPost_id())
-                        .collection("interested")
-                        .document(curr_inter.getInterested_id())
-                        .update("approved",true);
+                holder.view_holder_model.updateApproved(curr_inter);
+
                 holder.check_btn.setVisibility(view.GONE);
                 holder.close_btn.setVisibility(view.GONE);
 
-                addNotification(curr_inter, true);
+                profile_list_model.addNotification(curr_inter, true);
             }
         });
 
@@ -127,36 +110,11 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
                 holder.close_btn.setVisibility(view.GONE);
                 interested_list.remove(curr_inter);
                 notifyDataSetChanged();
-                db.collection("posts")
-                        .document(curr_inter.getPost_id())
-                        .collection("interested")
-                        .document(curr_inter.getInterested_id()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(context, "the request has been removed!", Toast.LENGTH_SHORT).show();
+                profile_list_model.deleteInterested(curr_inter,context);
 
-                            }
-                        });
                 holder.check_btn.setVisibility(view.GONE);
                 holder.close_btn.setVisibility(view.GONE);
-                addNotification(curr_inter, false);
-            }
-        });
-    }
-
-    private void addNotification(Interested curr_inter, boolean flag){
-        Notification notification = new Notification(curr_inter.getPost_id(), flag);
-        notification.setDate(curr_inter.getDate());
-        db.collection("users")
-            .document(curr_inter.getEmail())
-            .collection("notifications").add(notification).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                db.collection("users")
-                        .document(curr_inter.getEmail())
-                        .collection("notifications")
-                        .document(documentReference.getId())
-                        .update("notification_id",documentReference.getId());
+                profile_list_model.addNotification(curr_inter, false);
             }
         });
     }
@@ -166,14 +124,14 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
      */
     @Override
     public int getItemCount() {
-        return interested_list.size();
+        return this.interested_list.size();
     }
 
 
     /**
      * This class is responsible for holding the view items of every item in our recycler view.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements Observer {
         private TextView name_txt;
         private TextView email_txt;
         private TextView date_txt;
@@ -181,6 +139,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
         private CardView parent;
         private ImageButton check_btn;
         private ImageButton close_btn;
+        private ViewHolderModel view_holder_model;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -191,6 +150,29 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
             parent = itemView.findViewById(R.id.parent);
             check_btn = itemView.findViewById(R.id.checkBtn);
             close_btn = itemView.findViewById(R.id.closeBtn);
+            view_holder_model = new ViewHolderModel();
+            view_holder_model.addObserver(this);
+        }
+
+        @Override
+        public void update(Observable observable, Object o) {
+            if(o instanceof User){
+                User curr_user = (User) o;
+                        this.name_txt.setText("Full Name: " + curr_user.getFirst_name() + " " + curr_user.getLast_name());
+                //Using Picasso library to download an image using URL:
+                Picasso.get()
+                        .load(curr_user.getImage_URL())
+                        .placeholder(R.mipmap.ic_launcher)
+                        .fit()
+                        .centerCrop()
+                        .into(this.profile_image);
+            }
+            if(o instanceof String){
+                String str = (String) o;
+
+            }
+
+
         }
     }
 }

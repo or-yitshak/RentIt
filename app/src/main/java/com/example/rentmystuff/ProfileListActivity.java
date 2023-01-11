@@ -22,6 +22,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This is the ProfileListActivity class.
@@ -29,16 +31,16 @@ import java.util.ArrayList;
  * From this page the user can reach "ProfileActivity" page.
  */
 
-public class ProfileListActivity extends AppCompatActivity {
+public class ProfileListActivity extends AppCompatActivity implements Observer {
 
     private String post_id; // The id of the post.
     private RecyclerView interested_rec_view; // recycle view of the interested users.
     private ProfileRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Interested> interested_list; // A list representing the interested users.
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-
+//    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private ProfileListModel profile_list_model;
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,7 +59,7 @@ public class ProfileListActivity extends AppCompatActivity {
                 return true;
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(ProfileListActivity.this, LoginActivity.class);
-                auth.signOut();
+                profile_list_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -86,33 +88,23 @@ public class ProfileListActivity extends AppCompatActivity {
         interested_rec_view = findViewById(R.id.interestedRecView);
         interested_rec_view.setLayoutManager(new LinearLayoutManager(this));
         interested_list = new ArrayList<Interested>();
+        profile_list_model = new ProfileListModel();
+        profile_list_model.addObserver(this);
 
-        //extracting from the firestore database the interested users information:
-        db.collection("posts").document(post_id).collection("interested").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        adapter = new ProfileRecViewAdapter(ProfileListActivity.this,interested_list, "MyProfileActivity", profile_list_model);
+        interested_rec_view.setAdapter(adapter);
+
+        profile_list_model.initInterestedList(post_id,interested_list, new FirestoreCallback() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                //If task is successful, insert interested user to the list:
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Interested curr_inter = doc.toObject(Interested.class);
-                        if(curr_inter.isDatePassed()){
-                            interested_list.remove(curr_inter);
-                            db.collection("posts")
-                                    .document(curr_inter.getPost_id())
-                                    .collection("interested")
-                                    .document(curr_inter.getInterested_id()).delete();
-                        }
-                        else{
-                            interested_list.add(curr_inter);
-                        }
-                    }
-                    adapter = new ProfileRecViewAdapter(ProfileListActivity.this, interested_list, "MyProfileActivity");
-                    interested_rec_view.setAdapter(adapter);
-                    //If not, throw an error to the user:
-                } else {
-                    Toast.makeText(ProfileListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
-                }
+            public void onCallback(ArrayList<Interested> list) {
+                adapter.setInterested_list(list);
             }
         });
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Toast.makeText(this, o.toString(), Toast.LENGTH_SHORT).show();
+
     }
 }
