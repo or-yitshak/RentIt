@@ -71,7 +71,7 @@ public class NotificationRecViewAdapter extends RecyclerView.Adapter<Notificatio
                 Post post = doc.toObject(Post.class);
                 post_id = post.getPost_id();
                 publisher_email[0] = post.getPublisher_email();
-                if(!auth.getCurrentUser().getEmail().equals(publisher_email[0])) {
+                if(!auth.getCurrentUser().getEmail().equals(publisher_email[0])) {//if its not my post
                     //Using Picasso library to download an image using URL:
                     Picasso.get()
                         .load(post.getImageURL())

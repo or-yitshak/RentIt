@@ -178,7 +178,7 @@ public class PostPageActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 db.collection("users")
-                                                        .document(in.getEmail())
+                                                        .document(curr_post.getPublisher_email())
                                                         .collection("notifications")
                                                         .document(documentReference.getId())
                                                         .update("notification_id",documentReference.getId());
