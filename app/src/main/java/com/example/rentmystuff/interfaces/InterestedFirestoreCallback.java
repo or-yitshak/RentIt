@@ -4,7 +4,7 @@ import com.example.rentmystuff.classes.Interested;
 
 import java.util.ArrayList;
 
-public interface FirestoreCallback {
+public interface InterestedFirestoreCallback {
     void onCallback(ArrayList<Interested> list);
 
 }

@@ -12,7 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.rentmystuff.interfaces.FirestoreCallback;
+import com.example.rentmystuff.interfaces.InterestedFirestoreCallback;
 import com.example.rentmystuff.HomeActivity;
 import com.example.rentmystuff.notificationViewList.NotificationActivity;
 import com.example.rentmystuff.R;
@@ -35,10 +35,9 @@ public class ProfileListActivity extends AppCompatActivity implements Observer {
     private RecyclerView interested_rec_view; // recycle view of the interested users.
     private ProfileRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
 
-//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Interested> interested_list; // A list representing the interested users.
-//    private FirebaseAuth auth = FirebaseAuth.getInstance();
     private ProfileListModel profile_list_model;
+
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,10 +88,10 @@ public class ProfileListActivity extends AppCompatActivity implements Observer {
         profile_list_model = new ProfileListModel();
         profile_list_model.addObserver(this);
 
-        adapter = new ProfileRecViewAdapter(ProfileListActivity.this,interested_list, "MyProfileActivity", profile_list_model);
+        adapter = new ProfileRecViewAdapter(ProfileListActivity.this,interested_list, profile_list_model);
         interested_rec_view.setAdapter(adapter);
 
-        profile_list_model.initInterestedList(post_id,interested_list, new FirestoreCallback() {
+        profile_list_model.initInterestedList(post_id,interested_list, new InterestedFirestoreCallback() {
             @Override
             public void onCallback(ArrayList<Interested> list) {
                 adapter.setInterested_list(list);
