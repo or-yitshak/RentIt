@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import com.example.rentmystuff.interfaces.PostsFirestoreCallback;
 import com.example.rentmystuff.notificationViewList.NotificationActivity;
 import com.example.rentmystuff.R;
 import com.example.rentmystuff.login.LoginActivity;
@@ -27,6 +28,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This is the PostsListActivity class.
@@ -34,14 +37,13 @@ import java.util.ArrayList;
  * From this page the user can reach the "PostPageActivity" page or go back to the "HomeActivity", "ProfileActivity" or "LoginActivity" pages.
  */
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity implements Observer {
     private RecyclerView posts_rec_view; //this allows us to show a list dynamically.
     private SearchView posts_search_view;
     private PostsRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ArrayList<Post> posts;
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private PostListModel post_list_model;
 
     private String email = "";
 
@@ -63,7 +65,7 @@ public class PostsListActivity extends AppCompatActivity {
                 return true;
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(PostsListActivity.this, LoginActivity.class);
-                auth.signOut();
+                post_list_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -110,48 +112,28 @@ public class PostsListActivity extends AppCompatActivity {
 
         posts_rec_view.setLayoutManager(new GridLayoutManager(this, 2));
         posts = new ArrayList<>();
+        post_list_model = new PostListModel();
+        post_list_model.addObserver(this);
+
+        adapter = new PostsRecViewAdapter(PostsListActivity.this, posts);
+        posts_rec_view.setAdapter(adapter);
+
+        post_list_model.getPosts(email, posts, new PostsFirestoreCallback() {
+            @Override
+            public void onCallback(ArrayList<Post> list) {
+                adapter.setPosts(list);
+            }
+        });
 
         //if the email is empty, previous page was the "HomeActivity".
         //If so, show all posts in the database.
-        if (email.equals("")) {
-            db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        //if task is successful, loop over all the posts and insert them in the array.
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            Post curr_post = doc.toObject(Post.class);
-                            curr_post.setPost_id(doc.getId());
-                            posts.add(curr_post);
-                        }
-                        adapter = new PostsRecViewAdapter(PostsListActivity.this, posts, "PostsListActivity");
-                        posts_rec_view.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-        //If email is not empty, previous page was from a Profile.
-        //If so, show all the posts of the current profile user:
-        else {
-            db.collection("posts").whereEqualTo("publisher_email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    //if task is successful, loop over all the posts and insert them in the array.
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            Post curr_post = doc.toObject(Post.class);
-                            curr_post.setPost_id(doc.getId());
-                            posts.add(curr_post);
-                        }
-                        adapter = new PostsRecViewAdapter(PostsListActivity.this, posts, "MyProfileActivity");
-                        posts_rec_view.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(PostsListActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if(o instanceof String){
+            Toast.makeText(this, o.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 }

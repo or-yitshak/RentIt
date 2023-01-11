@@ -6,7 +6,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.rentmystuff.classes.Post;
-import com.example.rentmystuff.interfaces.FirestoreCallback;
+import com.example.rentmystuff.interfaces.InterestedFirestoreCallback;
 import com.example.rentmystuff.Model;
 import com.example.rentmystuff.classes.Interested;
 import com.example.rentmystuff.classes.Notification;
@@ -28,7 +28,7 @@ public class ProfileListModel extends Model {
 
 
 
-    public void initInterestedList(String post_id, ArrayList<Interested> interested_list, FirestoreCallback firestore_callback) {
+    public void initInterestedList(String post_id, ArrayList<Interested> interested_list, InterestedFirestoreCallback firestore_callback) {
         db.collection("posts").document(post_id).collection("interested").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

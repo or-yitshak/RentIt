@@ -25,27 +25,24 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-/**
- * This is the ProfileRecViewAdapter class.
- * It adapts the profile list item XML to the recycler view.
- */
 
 public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAdapter.ViewHolder> {
+    /**
+     * This is the ProfileRecViewAdapter class.
+     * It adapts the profile list item XML to the recycler view.
+     */
+
     private Context context; //reference to the activity that uses the adapter.
     private ArrayList<Interested> interested_list; // An ArrayList of interested users.
-    private String parent; //string representing from which class we arrived to profileListView.
-    private ActivityProfileListBinding binding;
-//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ProfileListModel profile_list_model;
 
     /**
      * Constructor for the ProfileRecViewAdapter class.
      */
-    public ProfileRecViewAdapter(Context context, ArrayList<Interested> users, String parent, ProfileListModel profile_list_model) {
+    public ProfileRecViewAdapter(Context context, ArrayList<Interested> users, ProfileListModel profile_list_model) {
         this.context = context;
         this.interested_list = users;
         this.profile_list_model = profile_list_model;
-        this.parent = parent;
     }
 
     public void setInterested_list(ArrayList<Interested> interested_list) {
@@ -71,7 +68,7 @@ public class ProfileRecViewAdapter extends RecyclerView.Adapter<ProfileRecViewAd
     @Override
     public void onBindViewHolder(@NonNull ProfileRecViewAdapter.ViewHolder holder, int position) {
         Interested curr_inter = this.interested_list.get(position);
-        holder.view_holder_model.setOnBindViewHolder(curr_inter);
+        holder.view_holder_model.setProfileOnBindViewHolder(curr_inter);
 
         holder.email_txt.setText("Email: " + curr_inter.getEmail());
         holder.date_txt.setText("Date: " + curr_inter.getDate());

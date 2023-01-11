@@ -17,15 +17,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rentmystuff.R;
+import com.example.rentmystuff.ViewHolderModel;
 import com.example.rentmystuff.classes.Post;
 import com.example.rentmystuff.classes.User;
 import com.example.rentmystuff.post.PostPageActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapter.ViewHolder> implements Filterable {
     /**
@@ -36,20 +38,23 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
     private Context context; //reference to the activity that uses the adapter.
     private ArrayList<Post> posts; // array of posts.
     private ArrayList<Post> posts_full;
-    private String parent; //string representing from which class we arrived to postListView.
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private PostListModel post_list_model;
 
     /**
      * Constructor for the PostsRecViewAdapter class.
      */
-    public PostsRecViewAdapter(Context context, ArrayList<Post> posts, String parent) {
+    public PostsRecViewAdapter(Context context, ArrayList<Post> posts) {
         this.context = context;
         this.posts = posts;
-        this.parent = parent;
         this.posts_full = new ArrayList<>(posts);//points to another place in the memory
     }
 
+    public void setPosts(ArrayList<Post> posts) {
+        this.posts = posts;
+        notifyDataSetChanged();
+        this.posts_full = new ArrayList<>(posts);
+
+    }
 
     /**
      * This function creates a view holder that contains all thr views in post_list_item XML.
@@ -71,13 +76,8 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
         Post current_post = this.posts.get(position);
         holder.post_title_txt.setText(current_post.getTitle());
         holder.post_category_txt.setText(current_post.getCategory());
-        db.collection("users").document(current_post.getPublisher_email()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User curr_user = documentSnapshot.toObject(User.class);
-                holder.post_name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name());
-            }
-        });
+        holder.view_holder_model.setPostOnBindViewHolder(current_post);
+
         //Using Picasso library to download an image using URL:
         Picasso.get()
                 .load(current_post.getImageURL())
@@ -149,13 +149,14 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
     /**
      * This class is responsible for holding the view items of every item in our recycler view.
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements Observer {
 
         private TextView post_title_txt;
         private TextView post_category_txt;
         private TextView post_name_txt;
         private ImageView post_image;
         private CardView parent;
+        private ViewHolderModel view_holder_model;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -164,6 +165,16 @@ public class PostsRecViewAdapter extends RecyclerView.Adapter<PostsRecViewAdapte
             post_category_txt = itemView.findViewById(R.id.postCategoryTxt);
             post_image = itemView.findViewById(R.id.postImageView);
             parent = itemView.findViewById(R.id.parent);
+            view_holder_model = new ViewHolderModel();
+            view_holder_model.addObserver(this);
+        }
+
+        @Override
+        public void update(Observable observable, Object o) {
+            if(o instanceof User){
+                User curr_user = (User)o;
+                this.post_name_txt.setText(curr_user.getFirst_name() + " " + curr_user.getLast_name());
+            }
         }
     }
 }
