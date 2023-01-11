@@ -166,6 +166,7 @@ public class PostPageActivity extends AppCompatActivity implements Observer {
         if(o instanceof Post){
 
             curr_post = (Post) o;
+            post_id = curr_post.getPost_id();
             if (post_model.getAuthEmail().equals(curr_post.getPublisher_email())) {
                 binding.rentBtn.setVisibility(View.GONE);
                 binding.datesBtn.setVisibility(View.GONE);

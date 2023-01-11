@@ -125,7 +125,9 @@ public class PostActivity extends AppCompatActivity implements Observer {
                 String category = binding.categorySpinner.getSelectedItem().toString();
                 String title = binding.titleEditText.getText().toString();
                 String address = binding.addressEditText.getText().toString();
-                int price = Integer.parseInt(binding.priceEditText.getText().toString());
+                int price =0;
+                if(!binding.priceEditText.getText().toString().equals(""))
+                    price = Integer.parseInt(binding.priceEditText.getText().toString());
                 String description = binding.descriptionEditText.getText().toString();
                 String priceCategory = binding.priceSpinner.getSelectedItem().toString();
                 //checking if the previous activity sent extra data:
@@ -216,7 +218,7 @@ public class PostActivity extends AppCompatActivity implements Observer {
             Post post = (Post) o;
             binding.titleEditText.setHint(post.getTitle());
             binding.addressEditText.setHint(post.getAddress());
-            binding.priceEditText.setHint(post.getPrice());
+            binding.priceEditText.setHint(String.valueOf(post.getPrice()));
             binding.descriptionEditText.setHint(post.getDescription());
             Picasso.get()
                     .load(post.getImageURL())
