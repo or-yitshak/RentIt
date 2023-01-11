@@ -18,22 +18,27 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * This is the Home class.
  * It can be reached from the "Register" or "Login" page.
  * From this page the user can be sent to the "PostsListActivity", "PostActivity", "ProfileActivity" or "Login" pages.
  */
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements Observer {
 
     private TextView hello_txt;
 
     private Button post_btn;
     private Button rent_btn;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser fire_user;
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private FirebaseAuth auth = FirebaseAuth.getInstance();
+//    private FirebaseUser fire_user;
+
+    private ProfileModel profile_model;
 
     @Override
     public void onBackPressed() {
@@ -60,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
             //send to the "LoginActivity" page and log user out of account:
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(HomeActivity.this, LoginActivity.class);
-                auth.signOut();
+                profile_model.signOut();
                 startActivity(intent2);
                 return true;
 
@@ -81,19 +86,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        fire_user = auth.getCurrentUser();
+        profile_model = new ProfileModel();
+        profile_model.addObserver(this);
+
         post_btn = findViewById(R.id.postBtn);
         rent_btn = findViewById(R.id.rentBtn);
         hello_txt = findViewById(R.id.helloTextView);
 
         //extracting the user information from firestore using the current user login information:
-        db.collection("users").document(fire_user.getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                hello_txt.setText("Hello " + user.getFirst_name() + "!");
-            }
-        });
+        profile_model.getUserInfo(profile_model.getEmail());
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,5 +111,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        User user = (User) o;
+        hello_txt.setText("Hello " + user.getFirst_name() + "!");
     }
 }
