@@ -144,7 +144,9 @@ public class ProfileActivity extends AppCompatActivity implements Observer {
         binding.firstNameTxt.setText("First Name: " + user.getFirst_name());
         binding.lastNameTxt.setText("Last Name: " + user.getLast_name());
         binding.emailTxt.setText("Email: " + email);
-        binding.phoneNumberTxt.setText("Phone Number: " + user.getPhone_number());
+        if(user.getPhone_number() != null ){
+            binding.phoneNumberTxt.setText("Phone Number: " + user.getPhone_number());
+        }
         //Using Picasso library to download an image using URL:
         Picasso.get()
                 .load(user.getImage_URL())
