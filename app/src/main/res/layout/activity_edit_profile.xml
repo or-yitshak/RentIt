@@ -37,28 +37,14 @@
                 android:layout_marginTop="25dp"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/firstNameTxt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/firstNameTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="First Name "
-                        android:textColor="#A3000000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textColor="#ff0000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="First Name "
+                    android:textColor="#A3000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/firstNameETxt"
@@ -66,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/input_style"
+                    android:drawableLeft="@drawable/user_icon2"
                     android:drawablePadding="13dp"
                     android:drawableTint="#65000000"
                     android:hint="Max"
@@ -80,33 +67,20 @@
                 android:layout_marginTop="25dp"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/lastNameTxt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/lastNameTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Last Name "
-                        android:textColor="#A3000000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textColor="#ff0000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="Last Name "
+                    android:textColor="#A3000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/lastNameETxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/user_icon2"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/input_style"
                     android:drawablePadding="13dp"
@@ -123,28 +97,14 @@
                 android:layout_marginTop="25dp"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/phoneNumberTxt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/phoneNumberTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Phone Number "
-                        android:textColor="#A3000000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textColor="#ff0000"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="Phone Number "
+                    android:textColor="#A3000000"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/phoneNumber"
@@ -155,6 +115,7 @@
                     android:drawablePadding="13dp"
                     android:drawableTint="#65000000"
                     android:hint="054-765-9286"
+                    android:drawableLeft="@drawable/phone_icon"
                     android:inputType="phone"
                     android:padding="15dp"
                     android:textColorHint="#b1b1b1"

@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/input_style"
+                android:drawableLeft="@drawable/title_icon"
                 android:drawablePadding="13dp"
                 android:drawableTint="#65000000"
                 android:hint="title"
@@ -57,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/input_style"
+                android:drawableLeft="@drawable/location_icon"
                 android:drawablePadding="13dp"
                 android:drawableTint="#65000000"
                 android:hint="address"
@@ -97,6 +99,7 @@
                 android:layout_below="@id/priceEditText"
                 android:layout_marginTop="15dp"
                 android:hint="description"
+                android:drawableLeft="@drawable/description_icon"
                 android:lines="5" />
 
             <TextView
