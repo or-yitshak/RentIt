@@ -45,6 +45,9 @@ async def create_user(user: User):
     return is_good
 
 def input_checks(user: User):
+    user.email = user.email.strip()
+    user.first_name = user.first_name.strip()
+    user.last_name = user.last_name.strip()
     arr = [user.email, user.password, user.confirm_password, user.first_name, user.last_name]
     for i in range(len(arr)):
         if len(arr[i]) == 0:
@@ -56,6 +59,6 @@ def input_checks(user: User):
         return "Password is too short"
     elif user.password != user.confirm_password:
         return "Password confirmation failed"
-    elif not re.match("[a-zA-Z]+", user.last_name) or not re.match("[a-zA-Z]+", user.first_name):
+    elif not user.last_name.isalpha() or not user.first_name.isalpha():
         return "Full name contains illegal characters"
     return "good"
