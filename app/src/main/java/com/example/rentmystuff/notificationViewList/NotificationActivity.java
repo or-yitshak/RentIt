@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.rentmystuff.HomeActivity;
 import com.example.rentmystuff.R;
 import com.example.rentmystuff.classes.Notification;
+import com.example.rentmystuff.interfaces.NotificationFirestoreCallback;
 import com.example.rentmystuff.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,15 +25,15 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class NotificationActivity extends AppCompatActivity {
+public class NotificationActivity extends AppCompatActivity implements Observer {
 
     private RecyclerView notification_rec_view; // recycle view of the interested users.
     private NotificationRecViewAdapter adapter; //adapts between the recycler view and the design of the items inside.
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private ArrayList<Notification> notification_list; // A list representing the interested users.
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private NotificationModel notification_model;
     //Adding a menu-bar (UI) allowing the user to go to his profile or log out.
 
     @Override
@@ -52,7 +53,7 @@ public class NotificationActivity extends AppCompatActivity {
                 return true;
             case R.id.logOutBtn:
                 Intent intent2 = new Intent(NotificationActivity.this, LoginActivity.class);
-                auth.signOut();
+                notification_model.signOut();
                 startActivity(intent2);
                 return true;
             case R.id.notificationBtn:
@@ -77,23 +78,27 @@ public class NotificationActivity extends AppCompatActivity {
         notification_rec_view.setLayoutManager(new LinearLayoutManager(this));
         notification_list = new ArrayList<Notification>();
 
-        //extracting from the firestore database the notification information:
-        db.collection("users").document(auth.getCurrentUser().getEmail()).collection("notifications").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        notification_model = new NotificationModel();
+        notification_model.addObserver(this);
+
+        adapter = new NotificationRecViewAdapter(NotificationActivity.this, notification_list);
+        notification_rec_view.setAdapter(adapter);
+
+        notification_model.getNotifications(notification_list, new NotificationFirestoreCallback() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                //If task is successful, insert interested user to the list:
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Notification notification = doc.toObject(Notification.class);
-                        notification_list.add(notification);
-                    }
-                    adapter = new NotificationRecViewAdapter(NotificationActivity.this, notification_list);
-                    notification_rec_view.setAdapter(adapter);
-                    //If not, throw an error to the user:
-                } else {
-                    Toast.makeText(NotificationActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
-                }
+            public void onCallback(ArrayList<Notification> list) {
+                adapter.setNotification_list(list);
             }
         });
+
+
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if(o instanceof String){
+            Toast.makeText(NotificationActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
