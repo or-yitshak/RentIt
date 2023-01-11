@@ -23,7 +23,7 @@ public class PostModel extends Model {
 
     public PostModel() {
         super();
-        storageReference = FirebaseStorage.getInstance().getReference().child("images");
+//        storageReference = FirebaseStorage.getInstance().getReference().child("images");
     }
 
     public void postIt(String category, String title, String description, String address, String price, String priceCategory) {
@@ -55,16 +55,13 @@ public class PostModel extends Model {
 
     public void editPost(String category, String title, String description, String address, String price, String priceCategory, String post_id) {
         if (imageURL != null) {
-            db.collection("posts").document(post_id).update("image_URL", imageURL);
+            db.collection("posts").document(post_id).update("imageURL", imageURL);
         }
         if (!title.equals("")) {
             db.collection("posts").document(post_id).update("title", title);
         }
         if (!address.equals("")) {
             db.collection("posts").document(post_id).update("address", address);
-        }
-        if (!category.equals("")) {
-            db.collection("posts").document(post_id).update("category", category);
         }
         if (!price.equals("")) {
             db.collection("posts").document(post_id).update("price", price);
